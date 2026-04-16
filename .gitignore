@@ -1,1 +1,11 @@
+# System Files
 .DS_Store
+
+# Logs
+*.log
+*.log.*
+
+# claude
+**/.claude/settings.local.json
+**/CLAUDE.local.md
+**/.claude/worktrees/
