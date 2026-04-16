@@ -62,7 +62,7 @@ on:
     branches: [main]
   pull_request:
 jobs:
-  scan:
+  secretlint:
     uses: nozomiishii/workflows/.github/workflows/secretlint.yaml@v1
 ```
 
