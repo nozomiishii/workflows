@@ -1,5 +1,18 @@
 # workflows
 
+English | [日本語](README.ja.md)
+
+<!-- Main Image -->
+<br>
+<div align="center">
+  <img src="https://media.giphy.com/media/mvWl6BhmEOt8v4qpMH/giphy.gif" alt="flow" width="480" />
+</div>
+<div align="right">
+  <small>via GIPHY</small>
+</div>
+<br>
+
+
 Reusable GitHub Actions workflows shared across nozomiishii projects.
 
 ## Available workflows
