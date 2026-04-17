@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/nozomiishii/workflows/compare/v1.1.0...v1.1.1) (2026-04-17)
+
+
+### Bug Fixes
+
+* add pull-requests read permission to actionlint reusable workflow ([#8](https://github.com/nozomiishii/workflows/issues/8)) ([396839c](https://github.com/nozomiishii/workflows/commit/396839c28d0585ce07dd07f6e9f7e619cd248b99))
+
 ## [1.1.0](https://github.com/nozomiishii/workflows/compare/v1.0.0...v1.1.0) (2026-04-16)
 
 
