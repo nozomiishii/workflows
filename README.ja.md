@@ -26,6 +26,8 @@ name: Pull Request title
 on:
   pull_request:
     types: [opened, edited, synchronize]
+permissions:
+  pull-requests: read
 jobs:
   pull-request:
     uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@v1
@@ -45,10 +47,15 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+permissions:
+  contents: read
+  pull-requests: read
 jobs:
   actionlint:
     uses: nozomiishii/workflows/.github/workflows/actionlint.yaml@v1
 ```
+
+`pull-requests: read` は `dorny/paths-filter` が `pull_request` イベントで PR の変更ファイル一覧を GitHub API 経由で取得するのに必要です。public repo の場合は public resource 扱いで権限なしでもアクセスできますが、**private repo では caller が明示的に付与しないと "Resource not accessible by integration" で失敗**します。
 
 ### `secretlint`
 
@@ -61,6 +68,8 @@ on:
   push:
     branches: [main]
   pull_request:
+permissions:
+  contents: read
 jobs:
   secretlint:
     uses: nozomiishii/workflows/.github/workflows/secretlint.yaml@v1

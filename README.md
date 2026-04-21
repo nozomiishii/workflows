@@ -26,6 +26,8 @@ name: Pull Request title
 on:
   pull_request:
     types: [opened, edited, synchronize]
+permissions:
+  pull-requests: read
 jobs:
   pull-request:
     uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@v1
@@ -45,10 +47,15 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+permissions:
+  contents: read
+  pull-requests: read
 jobs:
   actionlint:
     uses: nozomiishii/workflows/.github/workflows/actionlint.yaml@v1
 ```
+
+`pull-requests: read` is required because `dorny/paths-filter` uses the GitHub API to list PR files on `pull_request` events. Public repositories can access that endpoint without the scope (GitHub treats public resources as unauthenticated), but **private repositories will fail with "Resource not accessible by integration" unless the caller grants it**.
 
 ### `secretlint`
 
@@ -61,6 +68,8 @@ on:
   push:
     branches: [main]
   pull_request:
+permissions:
+  contents: read
 jobs:
   secretlint:
     uses: nozomiishii/workflows/.github/workflows/secretlint.yaml@v1
