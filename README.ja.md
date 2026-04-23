@@ -37,7 +37,7 @@ jobs:
 
 [rhysd/actionlint](https://github.com/rhysd/actionlint) と [zizmorcore/zizmor](https://github.com/zizmorcore/zizmor) で GitHub Actions の workflow を静的解析します。`dorny/paths-filter` で `.github/**/*.yaml` の変更時のみ lint を走らせ、aggregator の `required` job は常に結果を返すため、branch protection の required check として `github-actions / required` を 1 つ登録するだけで済みます。
 
-最小構成 — findings は Actions の job log に出力されます。どのプランでも動作（Free / Pro の private repo 含む）:
+zizmor は `persona: auditor` で走り、**どの severity（informational / low / medium / high）の finding でも job を失敗させる**方針です。finding が出たら **修正する**か、または [`.github/zizmor.yml`](https://docs.zizmor.sh/configuration/) 設定ファイルあるいは `# zizmor: ignore[<rule>]` inline コメントで**明示的に ignore**する必要があります。警告の放置を構造的に防ぐ設計。
 
 ```yaml
 name: GitHub Actions
@@ -58,22 +58,7 @@ jobs:
     uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v2
 ```
 
-Code Scanning と連携する構成 — zizmor の findings を SARIF として Security タブ / PR の inline annotation に表示します。[GitHub Advanced Security](https://github.com/security/plans) が必要で、public repo では無料、private repo では Team / Enterprise plan + Code Security add-on が必要（Free / Pro plan の private repo では利用不可）:
-
-```yaml
-permissions:
-  contents: read
-  pull-requests: read
-  security-events: write
-  actions: read
-jobs:
-  github-actions:
-    uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v2
-    with:
-      advanced-security: true
-```
-
-`pull-requests: read` は `dorny/paths-filter` が `pull_request` イベントで PR の変更ファイル一覧を GitHub API 経由で取得するのに必要です。public repo の場合は public resource 扱いで権限なしでもアクセスできますが、**private repo では caller が明示的に付与しないと "Resource not accessible by integration" で失敗**します。
+`pull-requests: read` は `dorny/paths-filter` が `pull_request` イベントで PR の変更ファイル一覧を GitHub API 経由で取得するのに必要です。public repo の場合は public resource 扱いで権限なしでもアクセスできますが、**private repo では caller が明示的に付与しないと "Resource not accessible by integration" で失敗**します。`actions: read` は zizmor の auditor persona が参照している action の metadata を検査するのに必要です。
 
 ### `secret-scan`
 

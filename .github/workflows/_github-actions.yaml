@@ -14,11 +14,8 @@ concurrency:
 permissions:
   contents: read
   pull-requests: read
-  security-events: write
   actions: read
 
 jobs:
   github-actions:
     uses: ./.github/workflows/github-actions.yaml
-    with:
-      advanced-security: true

@@ -7,13 +7,6 @@ on:
         type: string
         default: auditor
         description: zizmor persona (regular / pedantic / auditor)
-      advanced-security:
-        type: boolean
-        default: false
-        description: >
-          Upload zizmor SARIF results to Code Scanning.
-          Requires GitHub Advanced Security — available on public repos or Team/Enterprise + Code Security add-on.
-          Keep false for private repos on Free/Pro plans.
 
 permissions: {}
 
@@ -73,7 +66,6 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      security-events: write  # required to upload zizmor SARIF results to Code Scanning
       actions: read  # required for zizmor persona audits to inspect referenced actions metadata
     steps:
       - name: Checkout code
@@ -89,7 +81,7 @@ jobs:
         uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e # v0.5.3
         with:
           persona: ${{ inputs.persona }}
-          advanced-security: ${{ inputs.advanced-security }}
+          advanced-security: false
 
   required:
     needs: [changes, actionlint, zizmor]

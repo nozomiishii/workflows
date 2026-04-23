@@ -78,6 +78,25 @@ reusable workflow を呼び出すと、GitHub は check 名を **`<caller-job-na
 
 dogfood の `_<name>.yaml` でもこれらの規則を守る（本 repo の CI も他 repo の caller と同じ命名になる）。
 
+## Lint / 監査の方針
+
+### zizmor — 全 finding を CI で落とす
+
+`github-actions.yaml` 内の zizmor は **`advanced-security: false` 固定**で、`--min-severity` / `--no-exit-codes` は使わない。結果として、`informational` を含む**あらゆる severity の finding で CI が赤くなる**。
+
+これは警告放置を構造的に防ぐための意図的な opinion。GitHub Advanced Security の SARIF upload パスは提供しない（Code Scanning の PR comment は triage されずに放置されやすいため）。
+
+### finding が出たら
+
+**必ず対応を決める。スルーは禁止**。選択肢は 2 つ:
+
+1. **修正する**（推奨）— finding の原因を直接修正する
+2. **明示的に ignore する**:
+   - **継続的な ignore**: `.github/zizmor.yml` にルールを追加する（理由をコメントで残す）
+   - **one-off な ignore**: 該当行に `# zizmor: ignore[<rule>]` inline コメント（例外的用途のみ）
+
+caller 側（他 repo）でも同じ方針を推奨（README に記載）。
+
 ## 新しい reusable workflow を追加する時
 
 1. `.github/workflows/<name>.yaml` に `on: workflow_call:` で実体を書く

@@ -37,7 +37,7 @@ jobs:
 
 Audits GitHub Actions workflows with [rhysd/actionlint](https://github.com/rhysd/actionlint) and [zizmorcore/zizmor](https://github.com/zizmorcore/zizmor). `dorny/paths-filter` gates the lint jobs on changes to `.github/**/*.yaml`; an aggregator `required` job always reports, making it safe to register as a single branch-protection required check (`github-actions / required`).
 
-Minimal usage — findings go to the Actions job log. Works on any plan, including private repositories on Free / Pro:
+zizmor runs with `persona: auditor` and fails the job on findings of any severity (informational / low / medium / high). Any finding must be either fixed or explicitly suppressed via a [`.github/zizmor.yml`](https://docs.zizmor.sh/configuration/) config or an inline `# zizmor: ignore[<rule>]` comment, so warnings can't silently pile up.
 
 ```yaml
 name: GitHub Actions
@@ -58,22 +58,7 @@ jobs:
     uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v2
 ```
 
-With Code Scanning integration — uploads zizmor findings as SARIF so they appear in the Security tab and inline PR annotations. Requires [GitHub Advanced Security](https://github.com/security/plans), which is free on public repositories and a paid add-on on Team / Enterprise plans (not available on Free / Pro for private repositories):
-
-```yaml
-permissions:
-  contents: read
-  pull-requests: read
-  security-events: write
-  actions: read
-jobs:
-  github-actions:
-    uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v2
-    with:
-      advanced-security: true
-```
-
-`pull-requests: read` is required because `dorny/paths-filter` uses the GitHub API to list PR files on `pull_request` events. Public repositories can access that endpoint without the scope, but **private repositories will fail with "Resource not accessible by integration" unless the caller grants it**.
+`pull-requests: read` is required because `dorny/paths-filter` uses the GitHub API to list PR files on `pull_request` events. Public repositories can access that endpoint without the scope, but **private repositories will fail with "Resource not accessible by integration" unless the caller grants it**. `actions: read` is required by zizmor's auditor persona to inspect referenced actions metadata.
 
 ### `secret-scan`
 
