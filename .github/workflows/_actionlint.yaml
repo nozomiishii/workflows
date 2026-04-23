@@ -12,8 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
-  pull-requests: read
+  contents: read  # required by the reusable actionlint workflow (actions/checkout)
+  pull-requests: read  # required by dorny/paths-filter (via the reusable actionlint workflow) to list PR files
 
 jobs:
   actionlint:

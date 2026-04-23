@@ -12,9 +12,9 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
-  pull-requests: read
-  actions: read
+  contents: read  # required by the reusable github-actions workflow (actions/checkout)
+  pull-requests: read  # required by dorny/paths-filter to list PR files on pull_request events
+  actions: read  # required by zizmor auditor persona to inspect referenced actions metadata
 
 jobs:
   github-actions:

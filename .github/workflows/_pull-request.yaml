@@ -8,7 +8,7 @@ on:
       - synchronize
 
 permissions:
-  pull-requests: read
+  pull-requests: read  # required by action-semantic-pull-request (via the reusable pull-request workflow) to read the PR title
 
 jobs:
   pull-request:
