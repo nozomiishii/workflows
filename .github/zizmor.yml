@@ -1,0 +1,16 @@
+rules:
+  # anonymous-definition は「job に name: を付けよう」という info 指摘。
+  # この repo は job ID をそのまま check 名として使う命名規則（CLAUDE.md「Job 命名規則」参照）のため、
+  # name: を足すと ID との重複になるか、あるいは ID と name が drift するリスクが出る。
+  # よって anonymous-definition は意図的に ignore する。
+  #
+  # 対象は .github/workflows/ 配下で job を直接定義している全ファイル。
+  # caller 側の _<name>.yaml は内側 job が `uses:` だけなのでこの rule には引っかからない。
+  anonymous-definition:
+    ignore:
+      - actionlint.yaml
+      - github-actions.yaml
+      - pull-request.yaml
+      - release.yaml
+      - secret-scan.yaml
+      - secretlint.yaml
