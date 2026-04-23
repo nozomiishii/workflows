@@ -84,7 +84,7 @@ jobs:
           persona: ${{ inputs.persona }}
           advanced-security: true
 
-  success:
+  required:
     needs: [changes, actionlint, zizmor]
     if: always()
     runs-on: ubuntu-latest
