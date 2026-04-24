@@ -1,0 +1,14 @@
+# zizmor configuration
+# ref: https://docs.zizmor.sh/configuration/
+
+rules:
+  secrets-outside-env:
+    # __release.yaml の OP_SERVICE_ACCOUNT_TOKEN は意図的に repository secret として扱う。
+    # 1Password を single source of truth とし、blast-radius の縮小は GitHub Environment
+    # ではなく 1Password Service Account の vault scoping（repo 単位で vault を分離）で
+    # 実施している。Environment を追加しても同じ SA token を環境側に詰め直すだけになり
+    # 実効的な保護が増えないため、現段階では environment 化しない。
+    #
+    # 将来 SA を用途別に分割し、release に approval gate を付けたい段階で再評価する。
+    ignore:
+      - __release.yaml
