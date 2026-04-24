@@ -11,6 +11,17 @@ rules:
       - actionlint.yaml
       - github-actions.yaml
       - pull-request.yaml
-      - release.yaml
+      - __release.yaml
       - secret-scan.yaml
       - secretlint.yaml
+
+  # secrets-outside-env は「secret を environment 付き job 以外で参照しない」という auditor 監査。
+  # OP_SERVICE_ACCOUNT_TOKEN は 1Password Service Account の token で、
+  # GitHub 側は single entry point として repository secret 1 本のみ管理する運用。
+  # blast radius の縮小は GitHub Environment ではなく 1Password SA の vault scoping
+  # （repo 単位で vault を分離）側で担っているため、Environment 化は二重定義になる。
+  # 将来 release に approval gate を付けたい段階で Environment 化を再評価する。
+  secrets-outside-env:
+    config:
+      allow:
+        - OP_SERVICE_ACCOUNT_TOKEN
