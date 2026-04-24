@@ -1,0 +1,50 @@
+name: zizmor
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+
+      - name: Ensure shared zizmor config
+        # caller 側で .github/zizmor.yml / zizmor.yml / .zizmor.yml のいずれかが
+        # 存在すれば尊重する。無い場合のみ nozomiishii/workflows の共通方針を
+        # 書き込む。これにより caller 側は config を置かずに呼ぶだけで共通
+        # allowlist が適用され、独自設定が欲しい repo はファイルを置くだけで
+        # オーバーライドできる。
+        run: |
+          set -eu
+          if [ -f .github/zizmor.yml ] || [ -f .github/zizmor.yaml ] \
+            || [ -f zizmor.yml ] || [ -f .zizmor.yml ]; then
+            echo "Using caller repo's zizmor config"
+            exit 0
+          fi
+          mkdir -p .github
+          cat > .github/zizmor.yml <<'EOF'
+          # Shared zizmor config provided by nozomiishii/workflows
+          # ref: https://docs.zizmor.sh/configuration/
+          rules:
+            secrets-outside-env:
+              config:
+                allow:
+                  - OP_SERVICE_ACCOUNT_TOKEN
+          EOF
+
+      - name: Run zizmor
+        # https://github.com/zizmorcore/zizmor-action
+        uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e # v0.5.3

@@ -75,6 +75,27 @@ jobs:
     uses: nozomiishii/workflows/.github/workflows/secretlint.yaml@v1
 ```
 
+### `zizmor`
+
+[zizmorcore/zizmor](https://github.com/zizmorcore/zizmor) で GitHub Actions workflow を静的解析します。この reusable workflow は共通 config を同梱しており、`secrets-outside-env` に対して `OP_SERVICE_ACCOUNT_TOKEN` を allowlist 済みです（根拠: 1Password Service Account token を single entry point として扱い、blast radius の縮小は GitHub Environment ではなく 1Password SA の vault scoping で担う運用方針）。caller 側で `.github/zizmor.yml` / `zizmor.yml` / `.zizmor.yml` のいずれかを置けば、その config が共通 config を上書きします。
+
+```yaml
+name: Scan GitHub Actions workflows
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  zizmor:
+    uses: nozomiishii/workflows/.github/workflows/zizmor.yaml@v1
+```
+
 ## バージョニング
 
 バージョンは [Conventional Commits](https://www.conventionalcommits.org/) と [Release Please](https://github.com/googleapis/release-please) に従います。caller 側は SHA で固定し、末尾コメントにタグ名を残しておくと Renovate がアップグレードを提案してくれます:

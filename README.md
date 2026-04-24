@@ -75,6 +75,27 @@ jobs:
     uses: nozomiishii/workflows/.github/workflows/secretlint.yaml@v1
 ```
 
+### `zizmor`
+
+Audits GitHub Actions workflows with [zizmorcore/zizmor](https://github.com/zizmorcore/zizmor). The reusable workflow ships with a shared config that allowlists `OP_SERVICE_ACCOUNT_TOKEN` for `secrets-outside-env` (rationale: 1Password Service Account tokens are managed as single entry points with blast-radius reduction delegated to the 1Password SA vault scoping, not GitHub Environments). Callers that drop their own `.github/zizmor.yml` / `zizmor.yml` / `.zizmor.yml` override the shared config.
+
+```yaml
+name: Scan GitHub Actions workflows
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  zizmor:
+    uses: nozomiishii/workflows/.github/workflows/zizmor.yaml@v1
+```
+
 ## Versioning
 
 Versions follow [Conventional Commits](https://www.conventionalcommits.org/) + [Release Please](https://github.com/googleapis/release-please). Pin callers by SHA with the tag name in a trailing comment so Renovate can suggest upgrades:

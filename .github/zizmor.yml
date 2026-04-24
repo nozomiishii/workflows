@@ -3,12 +3,15 @@
 
 rules:
   secrets-outside-env:
-    # __release.yaml の OP_SERVICE_ACCOUNT_TOKEN は意図的に repository secret として扱う。
-    # 1Password を single source of truth とし、blast-radius の縮小は GitHub Environment
-    # ではなく 1Password Service Account の vault scoping（repo 単位で vault を分離）で
-    # 実施している。Environment を追加しても同じ SA token を環境側に詰め直すだけになり
-    # 実効的な保護が増えないため、現段階では environment 化しない。
+    # OP_SERVICE_ACCOUNT_TOKEN は 1Password Service Account の token で、
+    # GitHub 側では single entry point として repository secret で管理する。
+    # 1Password 集約運用では GitHub Environment で access gate を追加しても、
+    # 同じ SA token を environment 側に詰め直すだけで実効的な blast radius
+    # の縮小にならない。保護は 1Password SA の vault scoping（repo 単位で
+    # vault を分離）側で実施している。
     #
-    # 将来 SA を用途別に分割し、release に approval gate を付けたい段階で再評価する。
-    ignore:
-      - __release.yaml
+    # 将来 SA を用途別に分割し、release に approval gate を付けたい段階で
+    # Environment 化を再評価する。
+    config:
+      allow:
+        - OP_SERVICE_ACCOUNT_TOKEN
