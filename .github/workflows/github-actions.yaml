@@ -89,10 +89,13 @@ jobs:
             echo "Using caller's .github/zizmor.yaml"
             exit 0
           fi
+          # referenced_workflows は複数 match し得る（同一 workflow を異なる ref で複数 job が呼ぶ等）。
+          # 改行区切りで複数 SHA が返ると後段の curl URL が壊れるため first で 1 件に絞る。
           sha=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
-            --jq '.referenced_workflows[] | select(.path | startswith("nozomiishii/workflows/.github/workflows/github-actions.yaml@")) | .sha')
+            --jq '[.referenced_workflows[] | select(.path | startswith("nozomiishii/workflows/.github/workflows/github-actions.yaml@")) | .sha] | first // empty')
           if [ -z "${sha}" ]; then
             echo "Failed to resolve nozomiishii/workflows SHA from workflow run" >&2
+            echo "This workflow expects to be invoked as nozomiishii/workflows/... — forks/mirrors must ship their own .github/zizmor.yaml." >&2
             exit 1
           fi
           echo "Fetching shared default from nozomiishii/workflows@${sha}"
