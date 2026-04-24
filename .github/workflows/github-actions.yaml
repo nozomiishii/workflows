@@ -74,29 +74,23 @@ jobs:
           persist-credentials: false
 
       - name: Ensure zizmor config
-        # caller repo に .github/zizmor.yaml が無ければ、nozomiishii/workflows の共通 default を
-        # runner 上で書き込む。caller が独自 config を置いた場合はそのまま尊重する。
-        # 共通 default の内容は nozomiishii/workflows の .github/zizmor.yaml と同期させている。
+        # caller repo に .github/zizmor.yaml が無ければ、呼び出し時の SHA 指定と同じ
+        # commit から nozomiishii/workflows の .github/zizmor.yaml を fetch して置く。
+        # caller が独自 config を commit した場合はそのまま尊重する。single source of
+        # truth は library 側の .github/zizmor.yaml のみ（二重管理を避ける）。
+        env:
+          WORKFLOW_SHA: ${{ github.job_workflow_sha }}
         run: |
           set -eu
           if [ -f .github/zizmor.yaml ]; then
             echo "Using caller's .github/zizmor.yaml"
             exit 0
           fi
-          echo "Writing shared default config to .github/zizmor.yaml"
+          echo "Fetching shared default from nozomiishii/workflows@${WORKFLOW_SHA}"
           mkdir -p .github
-          cat > .github/zizmor.yaml <<'EOF'
-          # Shared default config injected by nozomiishii/workflows.
-          # To override, commit your own .github/zizmor.yaml in the caller repo.
-          # ref: https://github.com/nozomiishii/workflows/blob/main/.github/zizmor.yaml
-          rules:
-            anonymous-definition:
-              disable: true
-            secrets-outside-env:
-              config:
-                allow:
-                  - OP_SERVICE_ACCOUNT_TOKEN
-          EOF
+          curl -sSfL \
+            "https://raw.githubusercontent.com/nozomiishii/workflows/${WORKFLOW_SHA}/.github/zizmor.yaml" \
+            -o .github/zizmor.yaml
 
       - name: Run zizmor
         # https://github.com/zizmorcore/zizmor-action
