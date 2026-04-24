@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 permissions:
-  pull-requests: read
+  pull-requests: read  # required by action-semantic-pull-request to read the PR title via the GitHub API
 
 defaults:
   run:

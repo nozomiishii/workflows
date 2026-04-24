@@ -1,0 +1,21 @@
+name: GitHub Actions
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read  # required by the reusable github-actions workflow (actions/checkout)
+  pull-requests: read  # required by dorny/paths-filter to list PR files on pull_request events
+  actions: read  # required by zizmor auditor persona to inspect referenced actions metadata
+
+jobs:
+  github-actions:
+    uses: ./.github/workflows/github-actions.yaml

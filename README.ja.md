@@ -30,15 +30,17 @@ permissions:
   pull-requests: read
 jobs:
   pull-request:
-    uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@v1
+    uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@v2
 ```
 
-### `actionlint`
+### `github-actions`
 
-`.github/**/*.yaml` に対して [rhysd/actionlint](https://github.com/rhysd/actionlint) を実行します。`dorny/paths-filter` を使っているため、ジョブは常に Checks ビューに表示されます（branch protection の required checks と互換）。
+[rhysd/actionlint](https://github.com/rhysd/actionlint) と [zizmorcore/zizmor](https://github.com/zizmorcore/zizmor) で GitHub Actions の workflow を静的解析します。`dorny/paths-filter` で `.github/**/*.yaml` の変更時のみ lint を走らせ、aggregator の `required` job は常に結果を返すため、branch protection の required check として `github-actions / required` を 1 つ登録するだけで済みます。
+
+zizmor は `persona: auditor` で走り、**どの severity（informational / low / medium / high）の finding でも job を失敗させる**方針です。finding が出たら **修正する**か、または [`.github/zizmor.yaml`](https://docs.zizmor.sh/configuration/) 設定ファイルあるいは `# zizmor: ignore[<rule>]` inline コメントで**明示的に ignore**する必要があります。警告の放置を構造的に防ぐ設計。
 
 ```yaml
-name: Lint GitHub Actions workflows
+name: GitHub Actions
 on:
   workflow_dispatch:
   push:
@@ -50,14 +52,15 @@ concurrency:
 permissions:
   contents: read
   pull-requests: read
+  actions: read
 jobs:
-  actionlint:
-    uses: nozomiishii/workflows/.github/workflows/actionlint.yaml@v1
+  github-actions:
+    uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v2
 ```
 
-`pull-requests: read` は `dorny/paths-filter` が `pull_request` イベントで PR の変更ファイル一覧を GitHub API 経由で取得するのに必要です。public repo の場合は public resource 扱いで権限なしでもアクセスできますが、**private repo では caller が明示的に付与しないと "Resource not accessible by integration" で失敗**します。
+`pull-requests: read` は `dorny/paths-filter` が `pull_request` イベントで PR の変更ファイル一覧を GitHub API 経由で取得するのに必要です。public repo の場合は public resource 扱いで権限なしでもアクセスできますが、**private repo では caller が明示的に付与しないと "Resource not accessible by integration" で失敗**します。`actions: read` は zizmor の auditor persona が参照している action の metadata を検査するのに必要です。
 
-### `secretlint`
+### `secret-scan`
 
 [secretlint/secretlint](https://github.com/secretlint/secretlint) でリポジトリツリーをスキャンし、コミットされたシークレットを検出します。
 
@@ -71,8 +74,8 @@ on:
 permissions:
   contents: read
 jobs:
-  secretlint:
-    uses: nozomiishii/workflows/.github/workflows/secretlint.yaml@v1
+  secret-scan:
+    uses: nozomiishii/workflows/.github/workflows/secret-scan.yaml@v2
 ```
 
 ## バージョニング
@@ -80,7 +83,7 @@ jobs:
 バージョンは [Conventional Commits](https://www.conventionalcommits.org/) と [Release Please](https://github.com/googleapis/release-please) に従います。caller 側は SHA で固定し、末尾コメントにタグ名を残しておくと Renovate がアップグレードを提案してくれます:
 
 ```yaml
-uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@<sha>  # v1.0.0
+uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@<sha>  # v2.0.0
 ```
 
 ## ライセンス
