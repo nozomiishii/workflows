@@ -39,6 +39,10 @@ Audits GitHub Actions workflows with [rhysd/actionlint](https://github.com/rhysd
 
 zizmor runs with `persona: auditor` and fails the job on findings of any severity (informational / low / medium / high). Any finding must be either fixed or explicitly suppressed via a [`.github/zizmor.yaml`](https://docs.zizmor.sh/configuration/) config or an inline `# zizmor: ignore[<rule>]` comment, so warnings can't silently pile up.
 
+If the caller repo does not ship a `.github/zizmor.yaml`, the reusable workflow fetches [this repo's `.github/zizmor.yaml`](./.github/zizmor.yaml) at the same SHA the caller pinned and writes it onto the runner — `anonymous-definition` is disabled and `OP_SERVICE_ACCOUNT_TOKEN` is allowlisted for `secrets-outside-env`, the baseline used across `nozomiishii/*` repos. Committing your own `.github/zizmor.yaml` in the caller repo replaces the default entirely.
+
+> **Fork / mirror note**: the default-injection path is hardcoded to fetch from `nozomiishii/workflows`. If you fork or mirror this repo (e.g. `your-org/workflows`) and call the fork from your own caller, the SHA resolver will not match and the job fails with `Failed to resolve nozomiishii/workflows SHA from workflow run`. In that case, commit a `.github/zizmor.yaml` in the caller repo — the workflow honors caller-provided configs and skips the fetch.
+
 ```yaml
 name: GitHub Actions
 on:

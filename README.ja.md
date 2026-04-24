@@ -39,6 +39,10 @@ jobs:
 
 zizmor は `persona: auditor` で走り、**どの severity（informational / low / medium / high）の finding でも job を失敗させる**方針です。finding が出たら **修正する**か、または [`.github/zizmor.yaml`](https://docs.zizmor.sh/configuration/) 設定ファイルあるいは `# zizmor: ignore[<rule>]` inline コメントで**明示的に ignore**する必要があります。警告の放置を構造的に防ぐ設計。
 
+caller repo に `.github/zizmor.yaml` が存在しない場合、この reusable workflow は caller が pin している SHA と同じ commit から [本 repo の `.github/zizmor.yaml`](./.github/zizmor.yaml) を fetch して runner 上に展開します — `anonymous-definition` を disable、`secrets-outside-env` で `OP_SERVICE_ACCOUNT_TOKEN` を allowlist する内容で、nozomiishii 配下の repo 共通 baseline が自動適用されます。caller 側で独自の `.github/zizmor.yaml` を commit すれば、default の代わりにそちらが使われます。
+
+> **Fork / mirror についての注意**: default config の fetch 先は `nozomiishii/workflows` にハードコードされています。本 repo を fork / mirror（例: `your-org/workflows`）して、その fork を自分の caller から呼ぶと SHA resolver が match せず、`Failed to resolve nozomiishii/workflows SHA from workflow run` で job が失敗します。その場合は caller repo 側で `.github/zizmor.yaml` を commit してください — caller が config を提供した場合、workflow はそれを尊重して fetch をスキップします。
+
 ```yaml
 name: GitHub Actions
 on:
