@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0](https://github.com/nozomiishii/workflows/compare/v2.0.0...v3.0.0) (2026-04-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* v1 workflow files (`actionlint.yaml`, `secretlint.yaml`) are removed. Callers that have not migrated to the v2 names must do so before updating their pin past this commit.
+
+### Features
+
+* inject shared zizmor default into callers ([#33](https://github.com/nozomiishii/workflows/issues/33)) ([ef67c52](https://github.com/nozomiishii/workflows/commit/ef67c521a695453ea39559a8ab26e45e1297be11))
+* remove v1 reusable workflows and their dogfood callers ([#34](https://github.com/nozomiishii/workflows/issues/34)) ([4114f39](https://github.com/nozomiishii/workflows/commit/4114f39af968607bdcef88b48d29605df89728fd))
+
 ## [2.0.0](https://github.com/nozomiishii/workflows/compare/v1.1.1...v2.0.0) (2026-04-24)
 
 
