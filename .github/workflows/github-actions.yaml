@@ -74,22 +74,31 @@ jobs:
           persist-credentials: false
 
       - name: Ensure zizmor config
-        # caller repo に .github/zizmor.yaml が無ければ、呼び出し時の SHA 指定と同じ
-        # commit から nozomiishii/workflows の .github/zizmor.yaml を fetch して置く。
+        # caller repo に .github/zizmor.yaml が無ければ、呼び出し時の SHA と同じ commit から
+        # nozomiishii/workflows の .github/zizmor.yaml を fetch して置く。
         # caller が独自 config を commit した場合はそのまま尊重する。single source of
-        # truth は library 側の .github/zizmor.yaml のみ（二重管理を避ける）。
+        # truth は library 側の .github/zizmor.yaml のみ（inline 複製による二重管理を避ける）。
+        #
+        # github.job_workflow_sha は runner bug (actions/runner#2417) で空になるため、
+        # workflow run API の referenced_workflows から SHA を解決する。
         env:
-          WORKFLOW_SHA: ${{ github.job_workflow_sha }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -eu
           if [ -f .github/zizmor.yaml ]; then
             echo "Using caller's .github/zizmor.yaml"
             exit 0
           fi
-          echo "Fetching shared default from nozomiishii/workflows@${WORKFLOW_SHA}"
+          sha=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            --jq '.referenced_workflows[] | select(.path | startswith("nozomiishii/workflows/.github/workflows/github-actions.yaml@")) | .sha')
+          if [ -z "${sha}" ]; then
+            echo "Failed to resolve nozomiishii/workflows SHA from workflow run" >&2
+            exit 1
+          fi
+          echo "Fetching shared default from nozomiishii/workflows@${sha}"
           mkdir -p .github
           curl -sSfL \
-            "https://raw.githubusercontent.com/nozomiishii/workflows/${WORKFLOW_SHA}/.github/zizmor.yaml" \
+            "https://raw.githubusercontent.com/nozomiishii/workflows/${sha}/.github/zizmor.yaml" \
             -o .github/zizmor.yaml
 
       - name: Run zizmor
