@@ -1,26 +1,20 @@
 rules:
-  # anonymous-definition は「job に name: を付けよう」という info 指摘。
-  # この repo は job ID をそのまま check 名として使う命名規則（CLAUDE.md「Job 命名規則」参照）のため、
-  # name: を足すと ID との重複になるか、あるいは ID と name が drift するリスクが出る。
-  # よって anonymous-definition は意図的に ignore する。
-  #
-  # 対象は .github/workflows/ 配下で job を直接定義している全ファイル。
-  # caller 側の _<name>.yaml は内側 job が `uses:` だけなのでこの rule には引っかからない。
+  # anonymous-definition: 各 job に name: を付ける best practice 指摘。
+  # name: があれば job ID を rename しても合成 check 名を据え置ける backward
+  # compatibility が得られるが、対価として job ID と name: の double management が
+  # 恒常的に発生する。ID rename の頻度より double management のコストの方が高いと
+  # 判断し、rule を全体 off にして「job ID を唯一の合成 check 名ソース」に統一する。
   anonymous-definition:
-    ignore:
-      - actionlint.yaml
-      - github-actions.yaml
-      - pull-request.yaml
-      - __release.yaml
-      - secret-scan.yaml
-      - secretlint.yaml
+    disable: true
 
-  # secrets-outside-env は「secret を environment 付き job 以外で参照しない」という auditor 監査。
-  # OP_SERVICE_ACCOUNT_TOKEN は 1Password Service Account の token で、
-  # GitHub 側は single entry point として repository secret 1 本のみ管理する運用。
-  # blast radius の縮小は GitHub Environment ではなく 1Password SA の vault scoping
-  # （repo 単位で vault を分離）側で担っているため、Environment 化は二重定義になる。
-  # 将来 release に approval gate を付けたい段階で Environment 化を再評価する。
+  # secrets-outside-env: secret を environment 付き job 以外から参照しない、という監査。
+  # Environment 化で caller 側の job 単位に secret 露出を閉じ込められるメリットがあるが、
+  # 本 repo は 1Password SA token (OP_SERVICE_ACCOUNT_TOKEN) を single entry point として
+  # 1Password 側 vault scoping で blast radius を限定している。GitHub Environment を
+  # 重ねても同じ master key を別の箱に詰め直すだけで scope は変わらないため、
+  # double management のコストが Environment のメリットを上回る。
+  # OP_SERVICE_ACCOUNT_TOKEN のみ allowlist し、他の secret が environment 無しで
+  # 参照された時は従来通り検出できる状態を保つ。
   secrets-outside-env:
     config:
       allow:
