@@ -37,7 +37,7 @@ jobs:
 
 Audits GitHub Actions workflows with [rhysd/actionlint](https://github.com/rhysd/actionlint) and [zizmorcore/zizmor](https://github.com/zizmorcore/zizmor). `dorny/paths-filter` gates the lint jobs on changes to `.github/**/*.yaml`; an aggregator `required` job always reports, making it safe to register as a single branch-protection required check (`github-actions / required`).
 
-zizmor runs with `persona: auditor` and fails the job on findings of any severity (informational / low / medium / high). Any finding must be either fixed or explicitly suppressed via a [`.github/zizmor.yml`](https://docs.zizmor.sh/configuration/) config or an inline `# zizmor: ignore[<rule>]` comment, so warnings can't silently pile up.
+zizmor runs with `persona: auditor` and fails the job on findings of any severity (informational / low / medium / high). Any finding must be either fixed or explicitly suppressed via a [`.github/zizmor.yaml`](https://docs.zizmor.sh/configuration/) config or an inline `# zizmor: ignore[<rule>]` comment, so warnings can't silently pile up.
 
 ```yaml
 name: GitHub Actions

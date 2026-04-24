@@ -37,7 +37,7 @@ jobs:
 
 [rhysd/actionlint](https://github.com/rhysd/actionlint) と [zizmorcore/zizmor](https://github.com/zizmorcore/zizmor) で GitHub Actions の workflow を静的解析します。`dorny/paths-filter` で `.github/**/*.yaml` の変更時のみ lint を走らせ、aggregator の `required` job は常に結果を返すため、branch protection の required check として `github-actions / required` を 1 つ登録するだけで済みます。
 
-zizmor は `persona: auditor` で走り、**どの severity（informational / low / medium / high）の finding でも job を失敗させる**方針です。finding が出たら **修正する**か、または [`.github/zizmor.yml`](https://docs.zizmor.sh/configuration/) 設定ファイルあるいは `# zizmor: ignore[<rule>]` inline コメントで**明示的に ignore**する必要があります。警告の放置を構造的に防ぐ設計。
+zizmor は `persona: auditor` で走り、**どの severity（informational / low / medium / high）の finding でも job を失敗させる**方針です。finding が出たら **修正する**か、または [`.github/zizmor.yaml`](https://docs.zizmor.sh/configuration/) 設定ファイルあるいは `# zizmor: ignore[<rule>]` inline コメントで**明示的に ignore**する必要があります。警告の放置を構造的に防ぐ設計。
 
 ```yaml
 name: GitHub Actions
