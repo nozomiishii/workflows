@@ -46,9 +46,6 @@ If the caller repo does not ship a `.github/zizmor.yaml`, the reusable workflow 
 ```yaml
 name: GitHub Actions
 on:
-  workflow_dispatch:
-  push:
-    branches: [main]
   pull_request:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -59,8 +56,10 @@ permissions:
   actions: read
 jobs:
   github-actions:
-    uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v2
+    uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v3
 ```
+
+> **Trigger must be `pull_request` only.** The reusable workflow runs `actions/checkout` with `persist-credentials: false`, and `dorny/paths-filter` falls back to `git fetch` for any non-`pull_request` event (e.g. `push`, `workflow_dispatch` on a non-default branch) — the fetch then fails with `exit 128` because credentials were dropped. `pull_request` works because paths-filter takes the GitHub REST API path instead.
 
 `pull-requests: read` is required because `dorny/paths-filter` uses the GitHub API to list PR files on `pull_request` events. Public repositories can access that endpoint without the scope, but **private repositories will fail with "Resource not accessible by integration" unless the caller grants it**. `actions: read` is required by zizmor's auditor persona to inspect referenced actions metadata.
 
