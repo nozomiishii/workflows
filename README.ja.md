@@ -46,9 +46,6 @@ caller repo に `.github/zizmor.yaml` が存在しない場合、この reusable
 ```yaml
 name: GitHub Actions
 on:
-  workflow_dispatch:
-  push:
-    branches: [main]
   pull_request:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -59,8 +56,10 @@ permissions:
   actions: read
 jobs:
   github-actions:
-    uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v2
+    uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v3
 ```
+
+> **トリガーは `pull_request` のみ**にしてください。reusable workflow 側で `actions/checkout` を `persist-credentials: false` で実行しているため、`dorny/paths-filter` が `pull_request` 以外のイベント（`push` や、default branch 以外で実行された `workflow_dispatch`）では `git fetch` にフォールバックし、credential が無いため `exit 128` で失敗します。`pull_request` では paths-filter が GitHub REST API 経路を取るので発火しません。
 
 `pull-requests: read` は `dorny/paths-filter` が `pull_request` イベントで PR の変更ファイル一覧を GitHub API 経由で取得するのに必要です。public repo の場合は public resource 扱いで権限なしでもアクセスできますが、**private repo では caller が明示的に付与しないと "Resource not accessible by integration" で失敗**します。`actions: read` は zizmor の auditor persona が参照している action の metadata を検査するのに必要です。
 
