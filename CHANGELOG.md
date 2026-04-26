@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.0.1](https://github.com/nozomiishii/workflows/compare/v3.0.0...v3.0.1) (2026-04-26)
+
+
+### Bug Fixes
+
+* **ci:** scope github-actions trigger to pull_request only ([#38](https://github.com/nozomiishii/workflows/issues/38)) ([d43bbba](https://github.com/nozomiishii/workflows/commit/d43bbba61ee6cb1c4b4a7f5699ae03c35a916df7))
+
+
+### Miscellaneous
+
+* add CODEOWNERS file ([#36](https://github.com/nozomiishii/workflows/issues/36)) ([19b136d](https://github.com/nozomiishii/workflows/commit/19b136d5931167017c990edbae05802bf725449b))
+* update googleapis/release-please-action action to v5 ([#40](https://github.com/nozomiishii/workflows/issues/40)) ([83db856](https://github.com/nozomiishii/workflows/commit/83db856260cc9414b7413316f4f3efafa595790e))
+* update secretlint/secretlint docker tag to v12.2.0 ([#39](https://github.com/nozomiishii/workflows/issues/39)) ([979530c](https://github.com/nozomiishii/workflows/commit/979530c01d02883fe0070225d5395c22b8b14b85))
+
 ## [3.0.0](https://github.com/nozomiishii/workflows/compare/v2.0.0...v3.0.0) (2026-04-24)
 
 
