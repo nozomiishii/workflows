@@ -2,6 +2,18 @@ name: Pull Request title
 
 on:
   workflow_call:
+    inputs:
+      scopes:
+        description: |
+          Newline-separated whitelist of scopes allowed in PR titles (e.g. `feat(api): ...`).
+          Default (empty) forbids all scopes — only `feat: ...` / `fix: ...` / `chore: ...` are accepted.
+          Set this from the caller to opt in to specific scopes:
+            scopes: |
+              api
+              cli
+        type: string
+        default: ''
+        required: false
 
 permissions:
   pull-requests: read  # required by action-semantic-pull-request to read the PR title via the GitHub API
@@ -25,6 +37,11 @@ jobs:
             feat
             fix
             chore
+          scopes: ${{ inputs.scopes }}
+          # When `scopes` is empty (default), forbid all scopes via a blacklist regex that matches
+          # anything. When the caller opts in by passing `scopes`, drop the blacklist so the action's
+          # whitelist (`scopes:`) is the sole gate.
+          disallowScopes: ${{ inputs.scopes == '' && '.*' || '' }}
           subjectPattern: ^[a-z][A-Za-z0-9 .,:;!?'"`@#$%&*()\[\]{}<>/\\|+=_~-]+(?<! )$
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}" didn't match the configured pattern.

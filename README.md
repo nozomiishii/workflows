@@ -21,6 +21,8 @@ Reusable GitHub Actions workflows shared across nozomiishii projects.
 
 Validates pull request titles against the Conventional Commits spec. Restricts types to `feat` / `fix` / `chore` and enforces a lowercase-ASCII subject pattern.
 
+Scopes are **forbidden by default** — `feat(api): ...` will fail unless the caller opts in via the `scopes` input. Pass a newline-separated whitelist to allow only specific scopes:
+
 ```yaml
 name: Pull Request title
 on:
@@ -31,6 +33,11 @@ permissions:
 jobs:
   pull-request:
     uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@v2
+    # Optional: allow specific scopes. Omit this block to forbid all scopes.
+    # with:
+    #   scopes: |
+    #     api
+    #     cli
 ```
 
 ### `github-actions`
