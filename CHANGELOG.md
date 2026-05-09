@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.0.2](https://github.com/nozomiishii/workflows/compare/v3.0.1...v3.0.2) (2026-05-07)
+
+
+### Miscellaneous
+
+* drop systematized rules from claude.md ([#43](https://github.com/nozomiishii/workflows/issues/43)) ([9434a3c](https://github.com/nozomiishii/workflows/commit/9434a3cd73a9648426799e74f135ff15377bc6ac))
+* update secretlint/secretlint docker tag to v12.3.1 ([#41](https://github.com/nozomiishii/workflows/issues/41)) ([7367f1b](https://github.com/nozomiishii/workflows/commit/7367f1b894fbf0f8d17b2fc3d73bfd5c48a4c03f))
+* update secretlint/secretlint docker tag to v13 ([#44](https://github.com/nozomiishii/workflows/issues/44)) ([bbd07af](https://github.com/nozomiishii/workflows/commit/bbd07af48bf3a58393f81d554b8f45afe2f131a9))
+
 ## [3.0.1](https://github.com/nozomiishii/workflows/compare/v3.0.0...v3.0.1) (2026-04-26)
 
 
