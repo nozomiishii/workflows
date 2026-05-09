@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/nozomiishii/workflows/compare/v3.0.2...v3.1.0) (2026-05-09)
+
+
+### Features
+
+* forbid PR title scopes by default with caller opt-in input ([#45](https://github.com/nozomiishii/workflows/issues/45)) ([556698a](https://github.com/nozomiishii/workflows/commit/556698a81923bbcc81163c7703a5696962941009))
+
 ## [3.0.2](https://github.com/nozomiishii/workflows/compare/v3.0.1...v3.0.2) (2026-05-07)
 
 
