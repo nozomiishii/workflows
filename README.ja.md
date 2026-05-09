@@ -21,6 +21,8 @@ nozomiishii の各プロジェクトで共有する、再利用可能な GitHub 
 
 プルリクエストのタイトルを Conventional Commits 仕様に沿って検証します。type は `feat` / `fix` / `chore` に限定し、subject は小文字 ASCII パターンを強制します。
 
+scope は **デフォルトで禁止** されており、`feat(api): ...` のような scope 付きタイトルは弾かれます。caller 側で許可したい場合は `scopes` input に whitelist を渡してください（指定したものだけが許可される）。
+
 ```yaml
 name: Pull Request title
 on:
@@ -31,6 +33,11 @@ permissions:
 jobs:
   pull-request:
     uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@v2
+    # 任意: 特定の scope を許可する。省略すると全 scope 禁止のまま。
+    # with:
+    #   scopes: |
+    #     api
+    #     cli
 ```
 
 ### `github-actions`
