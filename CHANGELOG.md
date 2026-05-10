@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/nozomiishii/workflows/compare/v3.1.0...v3.1.1) (2026-05-10)
+
+
+### Miscellaneous
+
+* migrate create-github-app-token input from app-id to client-id ([#47](https://github.com/nozomiishii/workflows/issues/47)) ([3d6298a](https://github.com/nozomiishii/workflows/commit/3d6298aad45766b8babff501c05162b31675f2a1))
+
 ## [3.1.0](https://github.com/nozomiishii/workflows/compare/v3.0.2...v3.1.0) (2026-05-09)
 
 
