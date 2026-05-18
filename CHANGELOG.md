@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.2](https://github.com/nozomiishii/workflows/compare/v3.1.1...v3.1.2) (2026-05-18)
+
+
+### Miscellaneous
+
+* add startup hook for session sync ([#49](https://github.com/nozomiishii/workflows/issues/49)) ([830702b](https://github.com/nozomiishii/workflows/commit/830702b5b6f8326c0144118aa9d5374837d5bf2a))
+* update actions/create-github-app-token action to v3.2.0 ([#51](https://github.com/nozomiishii/workflows/issues/51)) ([72a6bb7](https://github.com/nozomiishii/workflows/commit/72a6bb76a5019b080cce71f4fdbccc561909f729))
+* update secretlint/secretlint docker tag to v13.0.2 ([#53](https://github.com/nozomiishii/workflows/issues/53)) ([61d576a](https://github.com/nozomiishii/workflows/commit/61d576a0d289149e844f3865c5366f4b399bca08))
+
 ## [3.1.1](https://github.com/nozomiishii/workflows/compare/v3.1.0...v3.1.1) (2026-05-10)
 
 
