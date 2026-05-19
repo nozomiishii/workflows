@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Load secrets from 1Password
         id: secrets
-        uses: 1password/load-secrets-action@92467eb28f72e8255933372f1e0707c567ce2259 # v4
+        uses: 1password/load-secrets-action@92467eb28f72e8255933372f1e0707c567ce2259 # v4.0.0
         with:
           # zizmor unpinned-tools 対策: op CLI のバージョンを明示 pin する。
           # default "latest" だと action 本体を SHA pin しても tool 実体が unpinned 扱いになる。
