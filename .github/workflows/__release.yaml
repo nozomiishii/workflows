@@ -31,8 +31,7 @@ jobs:
         id: secrets
         uses: 1password/load-secrets-action@92467eb28f72e8255933372f1e0707c567ce2259 # v4.0.0
         with:
-          # op CLI を pin しないと zizmor unpinned-tools で落ちる。下記 annotation で renovate が追従する
-          # renovate: datasource=docker depName=1password/op versioning=semver
+          # op CLI は zizmor unpinned-tools のためリテラル pin。renovate が 1password/op の docker タグで追従する
           version: "2.34.0"
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
