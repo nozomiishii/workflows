@@ -23,8 +23,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write  # required by release-please to push release commits, tags, and create GitHub releases
-      issues: write  # required by release-please to manage release-related issue labels
-      pull-requests: write  # required by release-please to open and update release PRs
+      pull-requests: write  # required by release-please to open and update release PRs (incl. PR labels)
 
     steps:
       - name: Load secrets from 1Password
@@ -44,7 +43,6 @@ jobs:
           client-id: ${{ steps.secrets.outputs.APP_ID }}
           private-key: ${{ steps.secrets.outputs.APP_PRIVATE_KEY }}
           permission-contents: write
-          permission-issues: write
           permission-pull-requests: write
 
       - name: Run release-please
