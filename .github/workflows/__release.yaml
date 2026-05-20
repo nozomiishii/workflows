@@ -45,8 +45,6 @@ jobs:
         with:
           client-id: ${{ steps.secrets.outputs.APP_ID }}
           private-key: ${{ steps.secrets.outputs.APP_PRIVATE_KEY }}
-          # zizmor github-app 対策: blanket installation permissions を継承させず、
-          # release-please が必要とする minimum scope だけを App token に付与する。
           permission-contents: write
           permission-issues: write
           permission-pull-requests: write
