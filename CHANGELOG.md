@@ -1,5 +1,27 @@
 # Changelog
 
+## [3.2.0](https://github.com/nozomiishii/workflows/compare/v3.1.2...v3.2.0) (2026-06-21)
+
+
+### Features
+
+* add required summary jobs to pull-request and secret-scan workflows ([#65](https://github.com/nozomiishii/workflows/issues/65)) ([8fb9c86](https://github.com/nozomiishii/workflows/commit/8fb9c866d0dcc53e83874d18f3de521b502510a0))
+
+
+### Bug Fixes
+
+* grant workflows permission to release app token for non-head releases ([#57](https://github.com/nozomiishii/workflows/issues/57)) ([7c205cb](https://github.com/nozomiishii/workflows/commit/7c205cb74199c7cc2c5eb06e10acfac769ce09ff))
+
+
+### Miscellaneous
+
+* adopt AGENTS.md and .hooks/ ([#62](https://github.com/nozomiishii/workflows/issues/62)) ([9d2cae2](https://github.com/nozomiishii/workflows/commit/9d2cae21c572938bcae87ffbc0cc4d8428f3df6d))
+* align CLAUDE.md with writing guidelines ([#61](https://github.com/nozomiishii/workflows/issues/61)) ([2704872](https://github.com/nozomiishii/workflows/commit/27048725d0e4065585edfe1099ec308e6b4b68cf))
+* update 1password/load-secrets-action action to v4.0.1 ([#63](https://github.com/nozomiishii/workflows/issues/63)) ([38cb748](https://github.com/nozomiishii/workflows/commit/38cb74859d634a134f3669d688fa127d1bfa9f35))
+* update 1password/op docker tag to v2.34.1 ([#64](https://github.com/nozomiishii/workflows/issues/64)) ([7ae06ea](https://github.com/nozomiishii/workflows/commit/7ae06eaff2b569f6658c237f6aa499ab5ab69879))
+* update actions/checkout action to v6.0.3 ([#60](https://github.com/nozomiishii/workflows/issues/60)) ([a9ffb3b](https://github.com/nozomiishii/workflows/commit/a9ffb3bff428e0ab8b33bfd06008e81fa40db1f7))
+* update actions/checkout action to v7 ([#66](https://github.com/nozomiishii/workflows/issues/66)) ([8c152dd](https://github.com/nozomiishii/workflows/commit/8c152dd3567c1634f735780a01a4fd667874123c))
+
 ## [3.1.2](https://github.com/nozomiishii/workflows/compare/v3.1.1...v3.1.2) (2026-05-20)
 
 
