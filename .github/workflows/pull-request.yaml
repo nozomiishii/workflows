@@ -63,3 +63,15 @@ jobs:
             - feat: trailing space␠  (trailing space)
             - feat: emoji 🚀  (emoji not allowed)
             - feat: 日本語 (english only allowed)
+
+  required:
+    needs: [validate]
+    if: always()
+    runs-on: ubuntu-slim
+    timeout-minutes: 1
+    steps:
+      - name: Fail if any required job failed or was cancelled
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: |
+          echo "A required job failed or was cancelled"
+          exit 1
