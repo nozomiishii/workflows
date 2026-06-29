@@ -15,8 +15,7 @@ on:
         default: ''
         required: false
 
-permissions:
-  pull-requests: write  # write: format revert PR titles, read: validate PR titles
+permissions: {}
 
 defaults:
   run:
@@ -26,6 +25,8 @@ jobs:
   validate:
     runs-on: ubuntu-slim
     timeout-minutes: 5
+    permissions:
+      pull-requests: write  # write: format revert PR titles, read: validate PR titles
 
     steps:
       - name: Format revert PR title
