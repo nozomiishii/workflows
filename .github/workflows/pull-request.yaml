@@ -29,6 +29,10 @@ jobs:
       pull-requests: write  # write: format revert PR titles, read: validate PR titles
 
     steps:
+      # GitHub の Revert ボタンが生成する Revert "..." 形式を conventional commits に変換する。
+      # GitHub 側にテンプレート変更機能はない: https://github.com/orgs/community/discussions/121757
+      #   Revert "feat: add something" → revert: "feat: add something"
+      #   Revert "fix(core): escape delimiters" → revert: "fix(core): escape delimiters"
       - name: Format revert PR title
         if: startsWith(github.event.pull_request.title, 'Revert "')
         env:
