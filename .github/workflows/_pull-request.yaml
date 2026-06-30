@@ -7,9 +7,10 @@ on:
       - edited
       - synchronize
 
-permissions:
-  pull-requests: read  # required by action-semantic-pull-request (via the reusable pull-request workflow) to read the PR title
+permissions: {}
 
 jobs:
   pull-request:
+    permissions:
+      pull-requests: write  # write: format revert PR titles, read: validate PR titles
     uses: ./.github/workflows/pull-request.yaml

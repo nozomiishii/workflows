@@ -19,7 +19,7 @@ Reusable GitHub Actions workflows shared across nozomiishii projects.
 
 ### `pull-request`
 
-Validates pull request titles against the Conventional Commits spec. Restricts types to `feat` / `fix` / `chore` and enforces a lowercase-ASCII subject pattern.
+Validates pull request titles against the Conventional Commits spec. Restricts types to `feat` / `fix` / `chore` / `revert` and enforces a lowercase-ASCII subject pattern. GitHub's auto-generated revert titles (`Revert "feat: ..."`) are automatically reformatted to `revert: "feat: ..."` so they pass validation and appear in the Release Please changelog under the "Reverts" section.
 
 Scopes are **forbidden by default** — `feat(api): ...` will fail unless the caller opts in via the `scopes` input. Pass a newline-separated whitelist to allow only specific scopes:
 
@@ -28,10 +28,11 @@ name: Pull Request title
 on:
   pull_request:
     types: [opened, edited, synchronize]
-permissions:
-  pull-requests: read
+permissions: {}
 jobs:
   pull-request:
+    permissions:
+      pull-requests: write  # write: format revert PR titles, read: validate PR titles
     uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@v2
     # Optional: allow specific scopes. Omit this block to forbid all scopes.
     # with:

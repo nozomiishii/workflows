@@ -15,8 +15,7 @@ on:
         default: ''
         required: false
 
-permissions:
-  pull-requests: read  # required by action-semantic-pull-request to read the PR title via the GitHub API
+permissions: {}
 
 defaults:
   run:
@@ -26,8 +25,24 @@ jobs:
   validate:
     runs-on: ubuntu-slim
     timeout-minutes: 5
+    permissions:
+      pull-requests: write  # write: format revert PR titles, read: validate PR titles
 
     steps:
+      # GitHub の Revert ボタンが生成する Revert "..." 形式を conventional commits に変換する。
+      # GitHub 側にテンプレート変更機能はない: https://github.com/orgs/community/discussions/121757
+      #   Revert "feat: add something" → revert: "feat: add something"
+      - name: Format revert PR title
+        if: startsWith(github.event.pull_request.title, 'Revert "')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          new_title="revert: ${PR_TITLE#Revert }"
+          gh pr edit "$PR_NUMBER" --title "$new_title" --repo "$REPO"
+
       - name: Validate PR title
         uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
         env:
@@ -37,12 +52,13 @@ jobs:
             feat
             fix
             chore
+            revert
           scopes: ${{ inputs.scopes }}
           # When `scopes` is empty (default), forbid all scopes via a blacklist regex that matches
           # anything. When the caller opts in by passing `scopes`, drop the blacklist so the action's
           # whitelist (`scopes:`) is the sole gate.
           disallowScopes: ${{ inputs.scopes == '' && '.*' || '' }}
-          subjectPattern: ^[a-z][A-Za-z0-9 .,:;!?'"`@#$%&*()\[\]{}<>/\\|+=_~-]+(?<! )$
+          subjectPattern: ^[a-z"][A-Za-z0-9 .,:;!?'"`@#$%&*()\[\]{}<>/\\|+=_~-]+(?<! )$
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}" didn't match the configured pattern.
 
