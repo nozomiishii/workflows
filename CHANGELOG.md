@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.3.0](https://github.com/nozomiishii/workflows/compare/v3.2.0...v3.3.0) (2026-06-30)
+
+
+### Features
+
+* auto-format GitHub revert PR titles to conventional commits ([#71](https://github.com/nozomiishii/workflows/issues/71)) ([b449bb1](https://github.com/nozomiishii/workflows/commit/b449bb17596e1dfc209071eda7ac47dd52528bc5))
+
+
+### Bug Fixes
+
+* use ubuntu-slim for required jobs ([#69](https://github.com/nozomiishii/workflows/issues/69)) ([23e76d6](https://github.com/nozomiishii/workflows/commit/23e76d6fc69d15fa2e39f2c88cadcaa7c9f5e5ad))
+
+
+### Miscellaneous
+
+* rename paths-filter output from workflows to src ([#67](https://github.com/nozomiishii/workflows/issues/67)) ([46ba784](https://github.com/nozomiishii/workflows/commit/46ba784fc11ff18481e222a926bc67a87b41e609))
+* update zizmorcore/zizmor-action action to v0.5.7 ([#70](https://github.com/nozomiishii/workflows/issues/70)) ([7a98cd9](https://github.com/nozomiishii/workflows/commit/7a98cd9a388b5365989b5a9ae7a5cf21b9ed6487))
+
 ## [3.2.0](https://github.com/nozomiishii/workflows/compare/v3.1.2...v3.2.0) (2026-06-21)
 
 
