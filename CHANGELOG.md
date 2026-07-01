@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/nozomiishii/workflows/compare/v3.3.0...v3.3.1) (2026-07-01)
+
+
+### Bug Fixes
+
+* use ghcr.io for secretlint Docker image to avoid Docker Hub timeouts ([#72](https://github.com/nozomiishii/workflows/issues/72)) ([0eb1fd6](https://github.com/nozomiishii/workflows/commit/0eb1fd6c2f2e5a31e6864c7bd1c91568c52d1cf1))
+
 ## [3.3.0](https://github.com/nozomiishii/workflows/compare/v3.2.0...v3.3.0) (2026-06-30)
 
 
