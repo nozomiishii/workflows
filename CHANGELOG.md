@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.3.2](https://github.com/nozomiishii/workflows/compare/v3.3.1...v3.3.2) (2026-07-18)
+
+
+### Miscellaneous
+
+* add .envrc for worktree setup ([#76](https://github.com/nozomiishii/workflows/issues/76)) ([b62d067](https://github.com/nozomiishii/workflows/commit/b62d067c6d2a0eb04983a99750742e9bf429cbd9))
+* move workflow authoring guide to docs ([#77](https://github.com/nozomiishii/workflows/issues/77)) ([9701872](https://github.com/nozomiishii/workflows/commit/97018721727ab00263fa456c1f7e55952e75ee14))
+* remove envrc setup boilerplate ([#79](https://github.com/nozomiishii/workflows/issues/79)) ([87f0e24](https://github.com/nozomiishii/workflows/commit/87f0e24146f553a9fc15dde14de5ae4002e8ff05))
+* update 1password/op docker tag to v2.35.0 ([#78](https://github.com/nozomiishii/workflows/issues/78)) ([67391f3](https://github.com/nozomiishii/workflows/commit/67391f3150150abe40184f1629d490afd7c16192))
+* update dorny/paths-filter action to v4.0.2 ([#74](https://github.com/nozomiishii/workflows/issues/74)) ([9f29b6b](https://github.com/nozomiishii/workflows/commit/9f29b6b542e3d7ab27349277af88ea5f7da08e12))
+* update zizmorcore/zizmor-action action to v0.6.0 ([#80](https://github.com/nozomiishii/workflows/issues/80)) ([b4d40aa](https://github.com/nozomiishii/workflows/commit/b4d40aae81f6483022adcfc457255ae385b93003))
+
 ## [3.3.1](https://github.com/nozomiishii/workflows/compare/v3.3.0...v3.3.1) (2026-07-01)
 
 
