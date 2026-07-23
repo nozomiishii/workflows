@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.3](https://github.com/nozomiishii/workflows/compare/v3.3.2...v3.3.3) (2026-07-23)
+
+
+### Miscellaneous
+
+* update actions/checkout action to v7.0.1 ([#81](https://github.com/nozomiishii/workflows/issues/81)) ([e1dfc44](https://github.com/nozomiishii/workflows/commit/e1dfc446a99c947b4d746d9349c9bfe96f9f5ab3))
+
 ## [3.3.2](https://github.com/nozomiishii/workflows/compare/v3.3.1...v3.3.2) (2026-07-18)
 
 
