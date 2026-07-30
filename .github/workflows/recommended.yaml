@@ -154,8 +154,11 @@ jobs:
       # 旧構成の zizmorcore/zizmor-action は Docker 必須のため ubuntu-slim では動かず、
       # PyPI 経由で同じバージョンの CLI を実行する。
       #
+      # config の自動発見は zizmor のバージョンで挙動が変わる (v1.13.0 と v1.29.0 で変更)。
+      # 直前の step が .github/zizmor.yaml の存在を保証しているため、発見に頼らず --config で明示する。
+      #
       # To run locally, execute the following command:
-      # uvx zizmor --persona=auditor ./.github/workflows/
+      # uvx zizmor --persona=auditor --config .github/zizmor.yaml .
       - name: Run zizmor
         if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
         env:
@@ -163,4 +166,4 @@ jobs:
           PERSONA: ${{ inputs.persona }}
           # renovate: datasource=pypi depName=zizmor
           ZIZMOR_VERSION: "1.28.0"
-        run: pipx run --spec "zizmor==${ZIZMOR_VERSION}" zizmor --persona "${PERSONA}" .
+        run: pipx run --spec "zizmor==${ZIZMOR_VERSION}" zizmor --persona "${PERSONA}" --config .github/zizmor.yaml .
