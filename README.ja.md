@@ -17,6 +17,40 @@ nozomiishii の各プロジェクトで共有する、再利用可能な GitHub 
 
 ## 利用可能な workflow
 
+`recommended` は下の3つの単体 workflow を1ジョブに束ねたプリセットです。個別チェックが必要な場合を除き、こちらを使ってください。
+
+### `recommended`
+
+推奨のエントリポイント: PR title 検証・secret scan・workflow lint(actionlint + zizmor)を1つの `ubuntu-slim` ジョブで実行します。GitHub Actions の課金はジョブごとに分単位で切り上げられるため、1分未満のチェックを workflow ごとに分けると課金だけが積み上がります。このプリセットは required check を `recommended / required` の1つに集約します。各チェック step は `if: ${{ !cancelled() }}` 付きで、1つのチェックが失敗しても他のチェックの指摘は隠れません。
+
+`push` / `workflow_dispatch` イベントでは secret scan だけが走ります — PR title 検証と workflow lint は `pull_request` イベント限定です(paths-filter step も `pull_request` 以外では skip されるため、`github-actions` の節に書いた非 `pull_request` イベントでの fetch 失敗の問題はこのプリセットでは起きません)。
+
+```yaml
+name: recommended
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions: {}
+jobs:
+  recommended:
+    permissions:
+      contents: read # actions/checkout に必要
+      pull-requests: write # write: revert PR タイトルの自動変換, read: PR タイトルの検証 / PR ファイル一覧の取得 (dorny/paths-filter)
+      actions: read # zizmor persona audits と referenced_workflows の解決に必要
+    uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha> # vX.Y.Z
+    # 任意 input — 単体 workflow と同じ:
+    # with:
+    #   scopes: |
+    #     api
+    #   persona: auditor
+```
+
 ### `pull-request`
 
 プルリクエストのタイトルを Conventional Commits 仕様に沿って検証します。type は `feat` / `fix` / `chore` / `revert` に限定し、subject は小文字 ASCII パターンを強制します。GitHub の Revert ボタンが生成する `Revert "feat: ..."` 形式のタイトルは、自動的に `revert: "feat: ..."` に変換されます。これにより validation を通過し、Release Please の changelog で "Reverts" セクションに表示されます。

@@ -1,0 +1,166 @@
+name: recommended
+
+on:
+  workflow_call:
+    inputs:
+      scopes:
+        description: |
+          Newline-separated whitelist of scopes allowed in PR titles (e.g. `feat(api): ...`).
+          Default (empty) forbids all scopes — only `feat: ...` / `fix: ...` / `chore: ...` are accepted.
+          Set this from the caller to opt in to specific scopes:
+            scopes: |
+              api
+              cli
+        type: string
+        default: ''
+        required: false
+      persona:
+        type: string
+        default: auditor
+        description: zizmor persona (regular / pedantic / auditor)
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # 旧 secret-scan / pull-request / github-actions の 3 workflow を 1 job に統合したプリセット。
+  # GitHub Actions の課金はジョブごとに分単位で切り上げられるため、サブミニットのチェックを
+  # ジョブ分割すると実行時間ゼロ相当の課金が積み上がる。実行ジョブ自体を required job にして
+  # ジョブ数を 1 にする (check 名は `<caller job id> / required` の規約を維持)。
+  required:
+    runs-on: ubuntu-slim
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write # write: format revert PR titles, read: validate PR titles / list PR files (dorny/paths-filter)
+      actions: read # required by zizmor persona audits and referenced_workflows resolution
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # 各チェックの step に `if: !cancelled()` を付け、前段が失敗しても後段のチェックを実行する。
+      # 旧構成でジョブが独立していた「指摘が一度に全部返る」性質の維持。
+      # always() にしないのは、concurrency の cancel-in-progress や手動キャンセルには従うため。
+
+      # ---- Pull Request title ----
+
+      # GitHub の Revert ボタンが生成する Revert "..." 形式を conventional commits に変換する。
+      # GitHub 側にテンプレート変更機能はない: https://github.com/orgs/community/discussions/121757
+      #   Revert "feat: add something" → revert: "feat: add something"
+      - name: Format revert PR title
+        if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Revert "')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          new_title="revert: ${PR_TITLE#Revert }"
+          gh pr edit "$PR_NUMBER" --title "$new_title" --repo "$REPO"
+
+      - name: Validate PR title
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+        uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            chore
+            revert
+          scopes: ${{ inputs.scopes }}
+          # When `scopes` is empty (default), forbid all scopes via a blacklist regex that matches
+          # anything. When the caller opts in by passing `scopes`, drop the blacklist so the action's
+          # whitelist (`scopes:`) is the sole gate.
+          disallowScopes: ${{ inputs.scopes == '' && '.*' || '' }}
+
+      # ---- Secret scan ----
+
+      # https://github.com/secretlint/secretlint
+      # 旧構成の docker://ghcr.io/secretlint/secretlint と同じ全ルール入りバンドルの npm 版。
+      # ubuntu-slim は Docker を使えないため npm レジストリ経由で実行する。
+      #
+      # To run locally, execute the following command:
+      # npx --yes @secretlint/quick-start "**/*"
+      - name: Run secretlint
+        if: ${{ !cancelled() }}
+        env:
+          # renovate: datasource=npm depName=@secretlint/quick-start
+          SECRETLINT_VERSION: "13.0.2"
+        run: npx --yes "@secretlint/quick-start@${SECRETLINT_VERSION}" "**/*"
+
+      # ---- GitHub Actions lint (.github/**/*.yaml 変更時のみ) ----
+
+      - name: Detect workflow changes
+        id: changes
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+        uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
+        with:
+          filters: |
+            src:
+              - '.github/**/*.yaml'
+
+      # https://github.com/rhysd/actionlint
+      # download script は v1.7.12 tag の commit SHA に固定し、取得するバージョンは env で指定する。
+      # ubuntu-slim は Docker を使えないため、旧構成の docker://rhysd/actionlint をバイナリ取得に置き換えた。
+      - name: Run actionlint
+        if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
+        env:
+          # renovate: datasource=github-releases depName=rhysd/actionlint
+          ACTIONLINT_VERSION: "1.7.12"
+        run: |
+          bash <(curl -sSfL "https://raw.githubusercontent.com/rhysd/actionlint/914e7df21a07ef503a81201c76d2b11c789d3fca/scripts/download-actionlint.bash") "${ACTIONLINT_VERSION}" "${RUNNER_TEMP}"
+          "${RUNNER_TEMP}/actionlint" -color
+
+      # caller repo に .github/zizmor.yaml が無ければ、呼び出し時の SHA と同じ commit から
+      # nozomiishii/workflows の .github/zizmor.yaml を fetch して置く。
+      # caller が独自 config を commit した場合はそのまま尊重する。single source of
+      # truth は library 側の .github/zizmor.yaml のみ（inline 複製による二重管理を避ける）。
+      #
+      # github.job_workflow_sha は runner bug (actions/runner#2417) で空になるため、
+      # workflow run API の referenced_workflows から SHA を解決する。
+      - name: Ensure zizmor config
+        if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          if [ -f .github/zizmor.yaml ]; then
+            echo "Using caller's .github/zizmor.yaml"
+            exit 0
+          fi
+          # referenced_workflows は複数 match し得る（同一 workflow を異なる ref で複数 job が呼ぶ等）。
+          # 改行区切りで複数 SHA が返ると後段の curl URL が壊れるため first で 1 件に絞る。
+          sha=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            --jq '[.referenced_workflows[] | select(.path | startswith("nozomiishii/workflows/.github/workflows/recommended.yaml@")) | .sha] | first // empty')
+          if [ -z "${sha}" ]; then
+            echo "Failed to resolve nozomiishii/workflows SHA from workflow run" >&2
+            echo "This workflow expects to be invoked as nozomiishii/workflows/... — forks/mirrors must ship their own .github/zizmor.yaml." >&2
+            exit 1
+          fi
+          echo "Fetching shared default from nozomiishii/workflows@${sha}"
+          mkdir -p .github
+          curl -sSfL \
+            "https://raw.githubusercontent.com/nozomiishii/workflows/${sha}/.github/zizmor.yaml" \
+            -o .github/zizmor.yaml
+
+      # https://github.com/zizmorcore/zizmor
+      # 旧構成の zizmorcore/zizmor-action は Docker 必須のため ubuntu-slim では動かず、
+      # PyPI 経由で同じバージョンの CLI を実行する。
+      #
+      # To run locally, execute the following command:
+      # uvx zizmor --persona=auditor ./.github/workflows/
+      - name: Run zizmor
+        if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PERSONA: ${{ inputs.persona }}
+          # renovate: datasource=pypi depName=zizmor
+          ZIZMOR_VERSION: "1.28.0"
+        run: pipx run --spec "zizmor==${ZIZMOR_VERSION}" zizmor --persona "${PERSONA}" .

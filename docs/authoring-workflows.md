@@ -36,6 +36,22 @@ reusable workflow の命名規則・`.github/zizmor.yaml` のコメント書式�
 - paths-filter 等で条件実行する場合は、集約 job として `required` job を追加し、`if: always()` + `needs.*.result` で集約する。branch protection の required check はこの `<aggregator> / required` を単一エントリポイントとして登録する（`required` 命名は TypeScript や astral (ruff/uv) の流派に倣う。`success` は誤読の余地があるため避ける）
 - caller 側の job 名は単一ツール時と同じく、ファイル名と一致させる（例: `github-actions.yaml` を呼ぶ caller 側 job は `github-actions`）
 
+### Preset workflow（1 workflow = 複数チェック束・1 job）
+
+複数 concern のチェックを 1 つの job に束ねてコストを抑える場合（例: `recommended.yaml` が PR title 検証 + secretlint + actionlint + zizmor を束ねる）は、内側 job を `required` 1 つだけにし、各ツールは job 内の step として直列に実行する。
+
+| reusable workflow | 内側 job 名 | 合成 check 名 |
+|---|---|---|
+| `recommended.yaml` | `required` | `recommended / required` |
+
+規則:
+
+- GitHub Actions の課金はジョブごとに分単位で切り上げられるため、サブミニットのチェック群は job 分割せず step で束ねる。Aggregator pattern は check 名でツールを識別できる利点と引き換えに、PR イベントごとのジョブ課金が積み上がる。分単位課金が効く頻度・規模で使う workflow は Preset を選ぶ
+- 各チェック step には `if: ${{ !cancelled() }}` を付け、前段の失敗で後段のチェックが skip されないようにする（ジョブが独立していた時と同じ「指摘が一度に全部返る」性質の維持）。`always()` は cancel にも従わなくなるため使わない
+- paths-filter 等の条件実行は step の `if` で行う。job 自体は常に完走して結果を報告するため、required check が pending で固まる問題は起きない
+- どのツールが落ちたかは job 内の step 名で識別する（合成 check 名では識別できなくなるトレードオフを認識して選ぶ）
+- 新しいチェックの追加は preset に step を足す。単体でも呼びたい需要が出た場合のみ、単一ツール workflow を別途切り出す
+
 ### dogfood での遵守
 
 dogfood の `_<name>.yaml` でもこれらの規則を守る（本 repo の CI も他 repo の caller と同じ命名になる）。
@@ -56,6 +72,7 @@ benefit をゼロ扱いせず、存在を認めた上で repo の文脈では上
 - 内側 job 名を決める
   - 単一ツール workflow → 役割（`validate` / `lint` / `scan` / `build` 等）
   - Aggregator pattern workflow → ツール名（`actionlint` / `zizmor` / `secretlint` 等）+ 集約用 `required` job
+  - Preset workflow → `required` job 1 つのみ（ツールは step で束ねる）
 - `.github/workflows/_<name>.yaml` に dogfood CI を追加（caller 側 job 名は `<name>` と一致させる）
 - `README.md` / `README.ja.md` に使用例を追記（caller 側 job 名も `<name>` で書く）
 - conventional commits で `feat:` コミット → Release Please が minor bump した PR を自動起票
