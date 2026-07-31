@@ -2,19 +2,21 @@ name: recommended
 
 on:
   workflow_call:
+    # workflow_call の inputs は boolean / number / string のフラット構造のみで、
+    # ネストできない。ツールごとのまとまりは `<tool>-<name>` の prefix で表す。
     inputs:
-      scopes:
+      pr-title-scopes:
         description: |
           Newline-separated whitelist of scopes allowed in PR titles (e.g. `feat(api): ...`).
           Default (empty) forbids all scopes — only `feat: ...` / `fix: ...` / `chore: ...` are accepted.
           Set this from the caller to opt in to specific scopes:
-            scopes: |
+            pr-title-scopes: |
               api
               cli
         type: string
         default: ''
         required: false
-      persona:
+      zizmor-persona:
         type: string
         default: auditor
         description: zizmor persona (regular / pedantic / auditor)
@@ -26,10 +28,9 @@ defaults:
     shell: bash
 
 jobs:
-  # 旧 secret-scan / pull-request / github-actions の 3 workflow を 1 job に統合したプリセット。
   # GitHub Actions の課金はジョブごとに分単位で切り上げられるため、サブミニットのチェックを
-  # ジョブ分割すると実行時間ゼロ相当の課金が積み上がる。実行ジョブ自体を required job にして
-  # ジョブ数を 1 にする (check 名は `<caller job id> / required` の規約を維持)。
+  # ジョブ分割すると実行時間ゼロ相当の課金が積み上がる。全チェックを 1 job に束ね、
+  # 実行ジョブ自体を required job にする (check 名は `<caller job id> / required` の規約に従う)。
   required:
     runs-on: ubuntu-slim
     timeout-minutes: 10
@@ -43,8 +44,8 @@ jobs:
         with:
           persist-credentials: false
 
-      # 各チェックの step に `if: !cancelled()` を付け、前段が失敗しても後段のチェックを実行する。
-      # 旧構成でジョブが独立していた「指摘が一度に全部返る」性質の維持。
+      # 各チェックの step に `if: !cancelled()` を付け、前段が失敗しても後段のチェックを実行する
+      # (1 つのチェックの失敗で他のチェックの指摘が隠れないようにする)。
       # always() にしないのは、concurrency の cancel-in-progress や手動キャンセルには従うため。
 
       # ---- Pull Request title ----
@@ -74,16 +75,16 @@ jobs:
             fix
             chore
             revert
-          scopes: ${{ inputs.scopes }}
-          # When `scopes` is empty (default), forbid all scopes via a blacklist regex that matches
-          # anything. When the caller opts in by passing `scopes`, drop the blacklist so the action's
-          # whitelist (`scopes:`) is the sole gate.
-          disallowScopes: ${{ inputs.scopes == '' && '.*' || '' }}
+          scopes: ${{ inputs.pr-title-scopes }}
+          # When `pr-title-scopes` is empty (default), forbid all scopes via a blacklist regex that
+          # matches anything. When the caller opts in by passing `pr-title-scopes`, drop the blacklist
+          # so the action's whitelist (`scopes:`) is the sole gate.
+          disallowScopes: ${{ inputs.pr-title-scopes == '' && '.*' || '' }}
 
       # ---- Secret scan ----
 
       # https://github.com/secretlint/secretlint
-      # 旧構成の docker://ghcr.io/secretlint/secretlint と同じ全ルール入りバンドルの npm 版。
+      # @secretlint/quick-start は全公式ルール入りのバンドルで、設定ファイルなしで動く。
       # ubuntu-slim は Docker を使えないため npm レジストリ経由で実行する。
       #
       # To run locally, execute the following command:
@@ -107,8 +108,8 @@ jobs:
               - '.github/**/*.yaml'
 
       # https://github.com/rhysd/actionlint
+      # ubuntu-slim は Docker を使えないためバイナリを直接取得する。
       # download script は v1.7.12 tag の commit SHA に固定し、取得するバージョンは env で指定する。
-      # ubuntu-slim は Docker を使えないため、旧構成の docker://rhysd/actionlint をバイナリ取得に置き換えた。
       - name: Run actionlint
         if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
         env:
@@ -151,8 +152,7 @@ jobs:
             -o .github/zizmor.yaml
 
       # https://github.com/zizmorcore/zizmor
-      # 旧構成の zizmorcore/zizmor-action は Docker 必須のため ubuntu-slim では動かず、
-      # PyPI 経由で同じバージョンの CLI を実行する。
+      # zizmorcore/zizmor-action は Docker 必須のため ubuntu-slim では動かない。PyPI 経由で CLI を実行する。
       #
       # config の自動発見は zizmor のバージョンで挙動が変わる (v1.13.0 と v1.29.0 で変更)。
       # 直前の step が .github/zizmor.yaml の存在を保証しているため、発見に頼らず --config で明示する。
@@ -163,7 +163,7 @@ jobs:
         if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
-          PERSONA: ${{ inputs.persona }}
+          PERSONA: ${{ inputs.zizmor-persona }}
           # renovate: datasource=pypi depName=zizmor
           ZIZMOR_VERSION: "1.28.0"
         run: pipx run --spec "zizmor==${ZIZMOR_VERSION}" zizmor --persona "${PERSONA}" --config .github/zizmor.yaml .
