@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.4.0](https://github.com/nozomiishii/workflows/compare/v3.3.2...v3.4.0) (2026-08-01)
+
+
+### Features
+
+* add recommended preset workflow ([#85](https://github.com/nozomiishii/workflows/issues/85)) ([745015e](https://github.com/nozomiishii/workflows/commit/745015ec39a947f40371ead9f28413242880c2e9))
+
+
+### Miscellaneous
+
+* simplify shared zizmor config setup ([#86](https://github.com/nozomiishii/workflows/issues/86)) ([068f62c](https://github.com/nozomiishii/workflows/commit/068f62ce727768f26e234049a22ba54a0a7acd8f))
+* update 1password/load-secrets-action action to v4.1.1 ([#83](https://github.com/nozomiishii/workflows/issues/83)) ([a164520](https://github.com/nozomiishii/workflows/commit/a1645205132e5b57c7ed91793c00ddd1198f7707))
+* update actions/checkout action to v7.0.1 ([#81](https://github.com/nozomiishii/workflows/issues/81)) ([e1dfc44](https://github.com/nozomiishii/workflows/commit/e1dfc446a99c947b4d746d9349c9bfe96f9f5ab3))
+* update zizmorcore/zizmor-action action to v0.6.1 ([#84](https://github.com/nozomiishii/workflows/issues/84)) ([1666ec3](https://github.com/nozomiishii/workflows/commit/1666ec3dc084c3c193b1376efd8c56f053ecb406))
+
 ## [3.3.2](https://github.com/nozomiishii/workflows/compare/v3.3.1...v3.3.2) (2026-07-18)
 
 
