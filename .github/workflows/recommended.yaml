@@ -69,7 +69,7 @@ jobs:
         if: ${{ !cancelled() }}
         env:
           # renovate: datasource=npm depName=@secretlint/quick-start
-          SECRETLINT_VERSION: "13.0.2"
+          SECRETLINT_VERSION: "13.0.4"
         run: npx --yes "@secretlint/quick-start@${SECRETLINT_VERSION}" "**/*"
 
       # ----------------------------------------------------------------
