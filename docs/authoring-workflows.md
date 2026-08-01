@@ -50,6 +50,7 @@ reusable workflow の命名規則・`.github/zizmor.yaml` のコメント書式�
 - 各チェック step には `if: ${{ !cancelled() }}` を付け、前段の失敗で後段のチェックが skip されないようにする（ジョブが独立していた時と同じ「指摘が一度に全部返る」性質の維持）。`always()` は cancel にも従わなくなるため使わない
 - paths-filter 等の条件実行は step の `if` で行う。job 自体は常に完走して結果を報告するため、required check が pending で固まる問題は起きない
 - どのツールが落ちたかは job 内の step 名で識別する（合成 check 名では識別できなくなるトレードオフを認識して選ぶ）
+- ツールの config・バージョンは自動発見や latest に頼らず、flag / env で明示する（ツールのバージョン間で config 発見や既定値の挙動が変わっても caller の結果を安定させるため。例: zizmor の config 自動発見は v1.13.0 と v1.29.0 で変更されている）
 - 新しいチェックの追加は preset に step を足す。単体でも呼びたい需要が出た場合のみ、単一ツール workflow を別途切り出す
 
 ### dogfood での遵守

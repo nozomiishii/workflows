@@ -10,9 +10,8 @@ defaults:
     shell: bash
 
 jobs:
-  # GitHub Actions の課金はジョブごとに分単位で切り上げられるため、サブミニットのチェックを
-  # ジョブ分割すると実行時間ゼロ相当の課金が積み上がる。全チェックを 1 job に束ね、
-  # 実行ジョブ自体を required job にする (check 名は `<caller job id> / required` の規約に従う)。
+  # 全チェックを 1 job の step として直列実行する Preset workflow。
+  # 設計 (課金・`!cancelled()`・required 集約) は docs/authoring-workflows.md を参照。
   required:
     runs-on: ubuntu-slim
     timeout-minutes: 10
@@ -25,10 +24,6 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-
-      # 各チェックの step に `if: !cancelled()` を付け、前段が失敗しても後段のチェックを実行する
-      # (1 つのチェックの失敗で他のチェックの指摘が隠れないようにする)。
-      # always() にしないのは、concurrency の cancel-in-progress や手動キャンセルには従うため。
 
       # ---- Pull Request title ----
 
@@ -63,8 +58,6 @@ jobs:
       # ---- Secret scan ----
 
       # https://github.com/secretlint/secretlint
-      # @secretlint/quick-start は全公式ルール入りのバンドルで、設定ファイルなしで動く。
-      # ubuntu-slim は Docker を使えないため npm レジストリ経由で実行する。
       #
       # To run locally, execute the following command:
       # npx --yes @secretlint/quick-start "**/*"
@@ -87,8 +80,9 @@ jobs:
               - '.github/**/*.yaml'
 
       # https://github.com/rhysd/actionlint
-      # ubuntu-slim は Docker を使えないためバイナリを直接取得する。
-      # download script は v1.7.12 tag の commit SHA に固定し、取得するバージョンは env で指定する。
+      #
+      # To run locally, execute the following command:
+      # docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" rhysd/actionlint:latest
       - name: Run actionlint
         if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
         env:
@@ -113,10 +107,6 @@ jobs:
             -o .github/zizmor.yaml
 
       # https://github.com/zizmorcore/zizmor
-      # zizmorcore/zizmor-action は Docker 必須のため ubuntu-slim では動かない。PyPI 経由で CLI を実行する。
-      #
-      # config の自動発見は zizmor のバージョンで挙動が変わる (v1.13.0 と v1.29.0 で変更)。
-      # 直前の step が .github/zizmor.yaml の存在を保証しているため、発見に頼らず --config で明示する。
       #
       # To run locally, execute the following command:
       # uvx zizmor --persona=auditor --config .github/zizmor.yaml .
