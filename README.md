@@ -17,6 +17,35 @@ Reusable GitHub Actions workflows shared across nozomiishii projects.
 
 ## Available workflows
 
+`recommended` bundles the three standalone workflows below into a single job — prefer it unless you need an individual check.
+
+### `recommended`
+
+The recommended entry point: runs PR title validation, secret scan, and workflow lint (actionlint + zizmor) in one `ubuntu-slim` job. GitHub Actions bills per job with per-minute rounding, so sub-minute checks split across workflows multiply billable minutes; this preset reports a single required check (`recommended / required`) instead. Each check step runs with `if: ${{ !cancelled() }}`, so one failing check doesn't hide the others' findings.
+
+On `push` / `workflow_dispatch` events only the secret scan runs — PR title validation and workflow lint are gated to `pull_request` events (the paths-filter step is skipped outside `pull_request`, so the non-`pull_request` fetch pitfall described under `github-actions` does not apply here).
+
+```yaml
+name: recommended
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions: {}
+jobs:
+  recommended:
+    permissions:
+      contents: read # required by actions/checkout
+      pull-requests: write # write: format revert PR titles, read: validate PR titles / list PR files (dorny/paths-filter)
+      actions: read # required by zizmor persona audits and referenced_workflows resolution
+    uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha> # vX.Y.Z
+```
+
 ### `pull-request`
 
 Validates pull request titles against the Conventional Commits spec. Restricts types to `feat` / `fix` / `chore` / `revert` and enforces a lowercase-ASCII subject pattern. GitHub's auto-generated revert titles (`Revert "feat: ..."`) are automatically reformatted to `revert: "feat: ..."` so they pass validation and appear in the Release Please changelog under the "Reverts" section.
