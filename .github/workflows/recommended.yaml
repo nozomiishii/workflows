@@ -25,7 +25,9 @@ jobs:
         with:
           persist-credentials: false
 
-      # ---- Pull Request title ----
+      # ----------------------------------------------------------------
+      # pull-request
+      # ----------------------------------------------------------------
 
       # GitHub の Revert ボタンが生成する Revert "..." 形式を conventional commits に変換する。
       # GitHub 側にテンプレート変更機能はない: https://github.com/orgs/community/discussions/121757
@@ -55,7 +57,9 @@ jobs:
           # どの scope にもマッチする blacklist で、scope 付きタイトル (feat(api): 等) を全面禁止する
           disallowScopes: '.*'
 
-      # ---- Secret scan ----
+      # ----------------------------------------------------------------
+      # secret-scan
+      # ----------------------------------------------------------------
 
       # https://github.com/secretlint/secretlint
       #
@@ -68,7 +72,9 @@ jobs:
           SECRETLINT_VERSION: "13.0.2"
         run: npx --yes "@secretlint/quick-start@${SECRETLINT_VERSION}" "**/*"
 
-      # ---- GitHub Actions lint (.github/**/*.yaml 変更時のみ) ----
+      # ----------------------------------------------------------------
+      # github-actions
+      # ----------------------------------------------------------------
 
       - name: Detect workflow changes
         id: changes
