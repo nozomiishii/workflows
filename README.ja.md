@@ -44,11 +44,6 @@ jobs:
       pull-requests: write # write: revert PR タイトルの自動変換, read: PR タイトルの検証 / PR ファイル一覧の取得 (dorny/paths-filter)
       actions: read # zizmor persona audits と referenced_workflows の解決に必要
     uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha> # vX.Y.Z
-    # 任意 input — 対象ツール名の prefix 付き:
-    # with:
-    #   pr-title-scopes: |
-    #     api
-    #   zizmor-persona: auditor
 ```
 
 ### `pull-request`

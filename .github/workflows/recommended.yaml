@@ -2,24 +2,6 @@ name: recommended
 
 on:
   workflow_call:
-    # workflow_call の inputs は boolean / number / string のフラット構造のみで、
-    # ネストできない。ツールごとのまとまりは `<tool>-<name>` の prefix で表す。
-    inputs:
-      pr-title-scopes:
-        description: |
-          Newline-separated whitelist of scopes allowed in PR titles (e.g. `feat(api): ...`).
-          Default (empty) forbids all scopes — only `feat: ...` / `fix: ...` / `chore: ...` are accepted.
-          Set this from the caller to opt in to specific scopes:
-            pr-title-scopes: |
-              api
-              cli
-        type: string
-        default: ''
-        required: false
-      zizmor-persona:
-        type: string
-        default: auditor
-        description: zizmor persona (regular / pedantic / auditor)
 
 permissions: {}
 
@@ -75,11 +57,8 @@ jobs:
             fix
             chore
             revert
-          scopes: ${{ inputs.pr-title-scopes }}
-          # When `pr-title-scopes` is empty (default), forbid all scopes via a blacklist regex that
-          # matches anything. When the caller opts in by passing `pr-title-scopes`, drop the blacklist
-          # so the action's whitelist (`scopes:`) is the sole gate.
-          disallowScopes: ${{ inputs.pr-title-scopes == '' && '.*' || '' }}
+          # どの scope にもマッチする blacklist で、scope 付きタイトル (feat(api): 等) を全面禁止する
+          disallowScopes: '.*'
 
       # ---- Secret scan ----
 
@@ -145,7 +124,6 @@ jobs:
         if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
-          PERSONA: ${{ inputs.zizmor-persona }}
           # renovate: datasource=pypi depName=zizmor
           ZIZMOR_VERSION: "1.28.0"
-        run: pipx run --spec "zizmor==${ZIZMOR_VERSION}" zizmor --persona "${PERSONA}" --config .github/zizmor.yaml .
+        run: pipx run --spec "zizmor==${ZIZMOR_VERSION}" zizmor --persona auditor --config .github/zizmor.yaml .

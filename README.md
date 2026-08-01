@@ -44,11 +44,6 @@ jobs:
       pull-requests: write # write: format revert PR titles, read: validate PR titles / list PR files (dorny/paths-filter)
       actions: read # required by zizmor persona audits and referenced_workflows resolution
     uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha> # vX.Y.Z
-    # Optional inputs, prefixed by the tool they configure:
-    # with:
-    #   pr-title-scopes: |
-    #     api
-    #   zizmor-persona: auditor
 ```
 
 ### `pull-request`
