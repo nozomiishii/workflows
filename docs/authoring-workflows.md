@@ -4,6 +4,8 @@ reusable workflow の命名規則・`.github/zizmor.yaml` のコメント書式�
 
 ## Job 命名規則
 
+本 repo が現在提供する workflow は `recommended.yaml`（Preset）だけ。単一ツール / Aggregator の例に挙げた workflow は v3 まで提供していたもので、パターンの参考として残している。
+
 ### 単一ツール workflow（1 workflow = 1 ツール）
 
 本 repo では `<workflow> / <role>` で統一:
