@@ -70,7 +70,12 @@ jobs:
         env:
           # renovate: datasource=npm depName=@secretlint/quick-start
           SECRETLINT_VERSION: "13.0.4"
-        run: npx --yes "@secretlint/quick-start@${SECRETLINT_VERSION}" "**/*"
+        # npx は cwd の package.json を読むため、caller repo の devEngines / engines が
+        # runner の Node と一致しないと scan 前に落ちる。install と binary の解決は
+        # RUNNER_TEMP で行い、scan だけ workspace で実行する
+        run: |
+          bin=$(cd "${RUNNER_TEMP}" && npx --yes --package "@secretlint/quick-start@${SECRETLINT_VERSION}" -c 'command -v quick-start')
+          "${bin}" "**/*"
 
       # ----------------------------------------------------------------
       # github-actions
