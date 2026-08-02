@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.0.0](https://github.com/nozomiishii/workflows/compare/v3.4.1...v4.0.0) (2026-08-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop the standalone check workflows ([#92](https://github.com/nozomiishii/workflows/issues/92))
+
+### Features
+
+* drop the standalone check workflows ([#92](https://github.com/nozomiishii/workflows/issues/92)) ([16ef4d7](https://github.com/nozomiishii/workflows/commit/16ef4d71b5ea19876bdf393a126cb6caa296863c))
+
+
+### Miscellaneous
+
+* drop the legacy dogfood callers ([#89](https://github.com/nozomiishii/workflows/issues/89)) ([39843d7](https://github.com/nozomiishii/workflows/commit/39843d7477da6ac80fee44ddd8e811ea008e0dd2))
+
 ## [3.4.1](https://github.com/nozomiishii/workflows/compare/v3.4.0...v3.4.1) (2026-08-02)
 
 
