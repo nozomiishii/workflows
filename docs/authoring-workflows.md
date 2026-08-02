@@ -4,7 +4,7 @@ reusable workflow の命名規則・`.github/zizmor.yaml` のコメント書式�
 
 ## Job 命名規則
 
-本 repo が現在提供する workflow は `recommended.yaml`（Preset）だけで、下の 3 パターンは追加時の指針。単一ツール / Aggregator の表に挙げた workflow 名は実在しない例。
+本 repo が現在提供する workflow は `recommended.yaml`（Preset）だけ。単一ツール / Aggregator の例に挙げた workflow は v3 まで提供していたもので、パターンの参考として残している。
 
 ### 単一ツール workflow（1 workflow = 1 ツール）
 
@@ -12,7 +12,7 @@ reusable workflow の命名規則・`.github/zizmor.yaml` のコメント書式�
 
 | reusable workflow | 内側 job 名（role） | caller 側 job 名（workflow） | 合成 check 名 |
 |---|---|---|---|
-| `markdown-lint.yaml` | `lint` | `markdown-lint` | `markdown-lint / lint` |
+| `pull-request.yaml` | `validate` | `pull-request` | `pull-request / validate` |
 
 規則:
 
@@ -22,20 +22,21 @@ reusable workflow の命名規則・`.github/zizmor.yaml` のコメント書式�
 
 ### Aggregator pattern workflow（1 workflow = 複数ツール）
 
-複数のツールを 1 つの workflow に束ねる場合（例: `container-scan.yaml` が trivy + hadolint を束ねる）は、内側 job 名をツール名にする。合成 check 名が `<aggregator> / <tool>` となり、どのツールが検出したかを識別できる。
+複数のツールを 1 つの workflow に束ねる場合（例: `github-actions.yaml` が actionlint + zizmor を束ねる）は、内側 job 名をツール名にする。合成 check 名が `<aggregator> / <tool>` となり、どのツールが検出したかを識別できる。
 
 | reusable workflow | 内側 job 名（tool） | 合成 check 名 |
 |---|---|---|
-| `container-scan.yaml` | `trivy` | `container-scan / trivy` |
-| `container-scan.yaml` | `hadolint` | `container-scan / hadolint` |
-| `container-scan.yaml` | `required`（集約）| `container-scan / required` |
+| `github-actions.yaml` | `actionlint` | `github-actions / actionlint` |
+| `github-actions.yaml` | `zizmor` | `github-actions / zizmor` |
+| `github-actions.yaml` | `required`（集約）| `github-actions / required` |
+| `secret-scan.yaml` | `secretlint` | `secret-scan / secretlint` |
 
 規則:
 
-- workflow 名は対象領域または concern を表す（`container-scan` = コンテナイメージ対象）。広すぎる概念名（`security` 等）は避ける
+- workflow 名は対象領域または concern を表す（`github-actions` = workflow ファイル対象、`secret-scan` = secret 漏洩検知）。広すぎる概念名（`security` 等）は避ける
 - 内側 job 名はツール名（`actionlint` / `zizmor` / `secretlint` / `gitleaks` 等）
 - paths-filter 等で条件実行する場合は、集約 job として `required` job を追加し、`if: always()` + `needs.*.result` で集約する。branch protection の required check はこの `<aggregator> / required` を単一エントリポイントとして登録する（`required` 命名は TypeScript や astral (ruff/uv) の流派に倣う。`success` は誤読の余地があるため避ける）
-- caller 側の job 名は単一ツール時と同じく、ファイル名と一致させる（例: `container-scan.yaml` を呼ぶ caller 側 job は `container-scan`）
+- caller 側の job 名は単一ツール時と同じく、ファイル名と一致させる（例: `github-actions.yaml` を呼ぶ caller 側 job は `github-actions`）
 
 ### Preset workflow（1 workflow = 複数チェック束・1 job）
 
