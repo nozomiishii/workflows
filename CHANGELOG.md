@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.4.1](https://github.com/nozomiishii/workflows/compare/v3.4.0...v3.4.1) (2026-08-02)
+
+
+### Bug Fixes
+
+* run secretlint without inheriting the caller's node constraints ([#90](https://github.com/nozomiishii/workflows/issues/90)) ([e7bb5f4](https://github.com/nozomiishii/workflows/commit/e7bb5f4a1df3e87245aa298645a8d489e2f89021))
+
+
+### Miscellaneous
+
+* update dependency @secretlint/quick-start to v13.0.4 ([#87](https://github.com/nozomiishii/workflows/issues/87)) ([f3be804](https://github.com/nozomiishii/workflows/commit/f3be8047099b9533a926fd2dfa79ce2d7dd0d9be))
+
 ## [3.4.0](https://github.com/nozomiishii/workflows/compare/v3.3.2...v3.4.0) (2026-08-01)
 
 
