@@ -17,13 +17,11 @@ Reusable GitHub Actions workflows shared across nozomiishii projects.
 
 ## Available workflows
 
-`recommended` bundles the three standalone workflows below into a single job — prefer it unless you need an individual check.
-
 ### `recommended`
 
 The recommended entry point: runs PR title validation, secret scan, and workflow lint (actionlint + zizmor) in one `ubuntu-slim` job. GitHub Actions bills per job with per-minute rounding, so sub-minute checks split across workflows multiply billable minutes; this preset reports a single required check (`recommended / required`) instead. Each check step runs with `if: ${{ !cancelled() }}`, so one failing check doesn't hide the others' findings.
 
-On `push` / `workflow_dispatch` events only the secret scan runs — PR title validation and workflow lint are gated to `pull_request` events (the paths-filter step is skipped outside `pull_request`, so the non-`pull_request` fetch pitfall described under `github-actions` does not apply here).
+On `push` / `workflow_dispatch` events only the secret scan runs — PR title validation and workflow lint are gated to `pull_request` events.
 
 ```yaml
 name: recommended
@@ -46,84 +44,12 @@ jobs:
     uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha> # vX.Y.Z
 ```
 
-### `pull-request`
-
-Validates pull request titles against the Conventional Commits spec. Restricts types to `feat` / `fix` / `chore` / `revert` and enforces a lowercase-ASCII subject pattern. GitHub's auto-generated revert titles (`Revert "feat: ..."`) are automatically reformatted to `revert: "feat: ..."` so they pass validation and appear in the Release Please changelog under the "Reverts" section.
-
-Scopes are **forbidden by default** — `feat(api): ...` will fail unless the caller opts in via the `scopes` input. Pass a newline-separated whitelist to allow only specific scopes:
-
-```yaml
-name: Pull Request title
-on:
-  pull_request:
-    types: [opened, edited, synchronize]
-permissions: {}
-jobs:
-  pull-request:
-    permissions:
-      pull-requests: write  # write: format revert PR titles, read: validate PR titles
-    uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@v2
-    # Optional: allow specific scopes. Omit this block to forbid all scopes.
-    # with:
-    #   scopes: |
-    #     api
-    #     cli
-```
-
-### `github-actions`
-
-Audits GitHub Actions workflows with [rhysd/actionlint](https://github.com/rhysd/actionlint) and [zizmorcore/zizmor](https://github.com/zizmorcore/zizmor). `dorny/paths-filter` gates the lint jobs on changes to `.github/**/*.yaml`; an aggregator `required` job always reports, making it safe to register as a single branch-protection required check (`github-actions / required`).
-
-zizmor runs with `persona: auditor` and fails the job on findings of any severity (informational / low / medium / high). Any finding must be either fixed or explicitly suppressed via a [`.github/zizmor.yaml`](https://docs.zizmor.sh/configuration/) config or an inline `# zizmor: ignore[<rule>]` comment, so warnings can't silently pile up.
-
-If the caller repo does not ship a `.github/zizmor.yaml`, the reusable workflow fetches [this repo's `.github/zizmor.yaml`](./.github/zizmor.yaml) at the same SHA the caller pinned and writes it onto the runner — `anonymous-definition` is disabled and `OP_SERVICE_ACCOUNT_TOKEN` is allowlisted for `secrets-outside-env`, the baseline used across `nozomiishii/*` repos. Committing your own `.github/zizmor.yaml` in the caller repo replaces the default entirely.
-
-> **Fork / mirror note**: the default-injection path is hardcoded to fetch from `nozomiishii/workflows`. If you fork or mirror this repo (e.g. `your-org/workflows`) and call the fork from your own caller, the SHA resolver will not match and the job fails with `Failed to resolve nozomiishii/workflows SHA from workflow run`. In that case, commit a `.github/zizmor.yaml` in the caller repo — the workflow honors caller-provided configs and skips the fetch.
-
-```yaml
-name: GitHub Actions
-on:
-  pull_request:
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-permissions:
-  contents: read
-  pull-requests: read
-  actions: read
-jobs:
-  github-actions:
-    uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v3
-```
-
-> **Trigger must be `pull_request` only.** The reusable workflow runs `actions/checkout` with `persist-credentials: false`, and `dorny/paths-filter` falls back to `git fetch` for any non-`pull_request` event (e.g. `push`, `workflow_dispatch` on a non-default branch) — the fetch then fails with `exit 128` because credentials were dropped. `pull_request` works because paths-filter takes the GitHub REST API path instead.
-
-`pull-requests: read` is required because `dorny/paths-filter` uses the GitHub API to list PR files on `pull_request` events. Public repositories can access that endpoint without the scope, but **private repositories will fail with "Resource not accessible by integration" unless the caller grants it**. `actions: read` is required by zizmor's auditor persona to inspect referenced actions metadata.
-
-### `secret-scan`
-
-Scans the repository tree for committed secrets via [secretlint/secretlint](https://github.com/secretlint/secretlint).
-
-```yaml
-name: Secret scan
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-  pull_request:
-permissions:
-  contents: read
-jobs:
-  secret-scan:
-    uses: nozomiishii/workflows/.github/workflows/secret-scan.yaml@v2
-```
-
 ## Versioning
 
 Versions follow [Conventional Commits](https://www.conventionalcommits.org/) + [Release Please](https://github.com/googleapis/release-please). Pin callers by SHA with the tag name in a trailing comment so Renovate can suggest upgrades:
 
 ```yaml
-uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@<sha>  # v2.0.0
+uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha>  # v4.0.0
 ```
 
 ## License

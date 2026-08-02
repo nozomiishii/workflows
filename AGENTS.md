@@ -12,8 +12,8 @@ nozomiishii の全 repo で共有する GitHub Actions reusable workflow を集�
 
 | prefix | 層 | 例 | 意味 |
 |---|---|---|---|
-| なし | Library (reusable) | `pull-request.yaml` / `github-actions.yaml` / `secret-scan.yaml` | 外部 caller が `uses: nozomiishii/workflows/.github/workflows/<name>.yaml@<sha>` で呼ぶ公開 API。`on: workflow_call:` 必須 |
-| `_` | Dogfood (self-CI) | `_pull-request.yaml` / `_github-actions.yaml` / `_secret-scan.yaml` | 本 repo 自身の PR/push に対して、Library を `./` で呼ぶ自 caller。他 repo の caller と同じ形式で自身を検証する |
+| なし | Library (reusable) | `recommended.yaml` | 外部 caller が `uses: nozomiishii/workflows/.github/workflows/<name>.yaml@<sha>` で呼ぶ公開 API。`on: workflow_call:` 必須 |
+| `_` | Dogfood (self-CI) | `_recommended.yaml` | 本 repo 自身の PR/push に対して、Library を `./` で呼ぶ自 caller。他 repo の caller と同じ形式で自身を検証する |
 | `__` | Repo-own (meta) | `__release.yaml` | 外部 caller から参照されない、本 repo 運営専用。Release Please 等の内部自動化 |
 
 - 0 本 = 外向き（caller API）
@@ -30,7 +30,7 @@ reusable workflow を呼び出すと、GitHub は check 名を `<caller-job-name
 
 ### zizmor — 全 finding を CI で落とす
 
-`github-actions.yaml` 内の zizmor は `advanced-security: false` 固定で、`--min-severity` / `--no-exit-codes` は使わない。結果として、`informational` を含むあらゆる severity の finding で CI が赤くなる。
+`recommended.yaml` 内の zizmor は `--persona auditor` 固定で、`--min-severity` / `--no-exit-codes` は使わない。結果として、`informational` を含むあらゆる severity の finding で CI が赤くなる。
 
 これは警告放置を構造的に防ぐための意図的な opinion。GitHub Advanced Security の SARIF upload パスは提供しない（Code Scanning の PR comment は triage されずに放置されやすいため）。
 

@@ -17,13 +17,11 @@ nozomiishii の各プロジェクトで共有する、再利用可能な GitHub 
 
 ## 利用可能な workflow
 
-`recommended` は下の3つの単体 workflow を1ジョブに束ねたプリセットです。個別チェックが必要な場合を除き、こちらを使ってください。
-
 ### `recommended`
 
 推奨のエントリポイント: PR title 検証・secret scan・workflow lint(actionlint + zizmor)を1つの `ubuntu-slim` ジョブで実行します。GitHub Actions の課金はジョブごとに分単位で切り上げられるため、1分未満のチェックを workflow ごとに分けると課金だけが積み上がります。このプリセットは required check を `recommended / required` の1つに集約します。各チェック step は `if: ${{ !cancelled() }}` 付きで、1つのチェックが失敗しても他のチェックの指摘は隠れません。
 
-`push` / `workflow_dispatch` イベントでは secret scan だけが走ります — PR title 検証と workflow lint は `pull_request` イベント限定です(paths-filter step も `pull_request` 以外では skip されるため、`github-actions` の節に書いた非 `pull_request` イベントでの fetch 失敗の問題はこのプリセットでは起きません)。
+`push` / `workflow_dispatch` イベントでは secret scan だけが走ります — PR title 検証と workflow lint は `pull_request` イベント限定です。
 
 ```yaml
 name: recommended
@@ -46,84 +44,12 @@ jobs:
     uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha> # vX.Y.Z
 ```
 
-### `pull-request`
-
-プルリクエストのタイトルを Conventional Commits 仕様に沿って検証します。type は `feat` / `fix` / `chore` / `revert` に限定し、subject は小文字 ASCII パターンを強制します。GitHub の Revert ボタンが生成する `Revert "feat: ..."` 形式のタイトルは、自動的に `revert: "feat: ..."` に変換されます。これにより validation を通過し、Release Please の changelog で "Reverts" セクションに表示されます。
-
-scope は **デフォルトで禁止** されており、`feat(api): ...` のような scope 付きタイトルは弾かれます。caller 側で許可したい場合は `scopes` input に whitelist を渡してください（指定したものだけが許可される）。
-
-```yaml
-name: Pull Request title
-on:
-  pull_request:
-    types: [opened, edited, synchronize]
-permissions: {}
-jobs:
-  pull-request:
-    permissions:
-      pull-requests: write  # write: revert PR タイトルの自動変換, read: PR タイトルの検証
-    uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@v2
-    # 任意: 特定の scope を許可する。省略すると全 scope 禁止のまま。
-    # with:
-    #   scopes: |
-    #     api
-    #     cli
-```
-
-### `github-actions`
-
-[rhysd/actionlint](https://github.com/rhysd/actionlint) と [zizmorcore/zizmor](https://github.com/zizmorcore/zizmor) で GitHub Actions の workflow を静的解析します。`dorny/paths-filter` で `.github/**/*.yaml` の変更時のみ lint を走らせ、aggregator の `required` job は常に結果を返すため、branch protection の required check として `github-actions / required` を 1 つ登録するだけで済みます。
-
-zizmor は `persona: auditor` で走り、**どの severity（informational / low / medium / high）の finding でも job を失敗させる**方針です。finding が出たら **修正する**か、または [`.github/zizmor.yaml`](https://docs.zizmor.sh/configuration/) 設定ファイルあるいは `# zizmor: ignore[<rule>]` inline コメントで**明示的に ignore**する必要があります。警告の放置を構造的に防ぐ設計。
-
-caller repo に `.github/zizmor.yaml` が存在しない場合、この reusable workflow は caller が pin している SHA と同じ commit から [本 repo の `.github/zizmor.yaml`](./.github/zizmor.yaml) を fetch して runner 上に展開します — `anonymous-definition` を disable、`secrets-outside-env` で `OP_SERVICE_ACCOUNT_TOKEN` を allowlist する内容で、nozomiishii 配下の repo 共通 baseline が自動適用されます。caller 側で独自の `.github/zizmor.yaml` を commit すれば、default の代わりにそちらが使われます。
-
-> **Fork / mirror についての注意**: default config の fetch 先は `nozomiishii/workflows` にハードコードされています。本 repo を fork / mirror（例: `your-org/workflows`）して、その fork を自分の caller から呼ぶと SHA resolver が match せず、`Failed to resolve nozomiishii/workflows SHA from workflow run` で job が失敗します。その場合は caller repo 側で `.github/zizmor.yaml` を commit してください — caller が config を提供した場合、workflow はそれを尊重して fetch をスキップします。
-
-```yaml
-name: GitHub Actions
-on:
-  pull_request:
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-permissions:
-  contents: read
-  pull-requests: read
-  actions: read
-jobs:
-  github-actions:
-    uses: nozomiishii/workflows/.github/workflows/github-actions.yaml@v3
-```
-
-> **トリガーは `pull_request` のみ**にしてください。reusable workflow 側で `actions/checkout` を `persist-credentials: false` で実行しているため、`dorny/paths-filter` が `pull_request` 以外のイベント（`push` や、default branch 以外で実行された `workflow_dispatch`）では `git fetch` にフォールバックし、credential が無いため `exit 128` で失敗します。`pull_request` では paths-filter が GitHub REST API 経路を取るので発火しません。
-
-`pull-requests: read` は `dorny/paths-filter` が `pull_request` イベントで PR の変更ファイル一覧を GitHub API 経由で取得するのに必要です。public repo の場合は public resource 扱いで権限なしでもアクセスできますが、**private repo では caller が明示的に付与しないと "Resource not accessible by integration" で失敗**します。`actions: read` は zizmor の auditor persona が参照している action の metadata を検査するのに必要です。
-
-### `secret-scan`
-
-[secretlint/secretlint](https://github.com/secretlint/secretlint) でリポジトリツリーをスキャンし、コミットされたシークレットを検出します。
-
-```yaml
-name: Secret scan
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-  pull_request:
-permissions:
-  contents: read
-jobs:
-  secret-scan:
-    uses: nozomiishii/workflows/.github/workflows/secret-scan.yaml@v2
-```
-
 ## バージョニング
 
 バージョンは [Conventional Commits](https://www.conventionalcommits.org/) と [Release Please](https://github.com/googleapis/release-please) に従います。caller 側は SHA で固定し、末尾コメントにタグ名を残しておくと Renovate がアップグレードを提案してくれます:
 
 ```yaml
-uses: nozomiishii/workflows/.github/workflows/pull-request.yaml@<sha>  # v2.0.0
+uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha>  # v4.0.0
 ```
 
 ## ライセンス
