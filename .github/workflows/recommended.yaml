@@ -126,5 +126,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           # renovate: datasource=pypi depName=zizmor
-          ZIZMOR_VERSION: "1.28.0"
+          ZIZMOR_VERSION: "1.29.0"
         run: pipx run --spec "zizmor==${ZIZMOR_VERSION}" zizmor --persona auditor --config .github/zizmor.yaml .
