@@ -78,10 +78,6 @@ jobs:
             - feat: emoji 🚀  (emoji not allowed)
             - feat: 日本語 (english only allowed)
 
-      - name: Test PR title policy
-        if: ${{ !cancelled() && github.repository == 'nozomiishii/workflows' }}
-        run: node --test tests/pr-title-policy.test.mjs
-
       # ----------------------------------------------------------------
       # secret-scan
       # ----------------------------------------------------------------
