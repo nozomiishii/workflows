@@ -56,6 +56,31 @@ jobs:
             revert
           # どの scope にもマッチする blacklist で、scope 付きタイトル (feat(api): 等) を全面禁止する
           disallowScopes: '.*'
+          subjectPattern: ^[a-z"][A-Za-z0-9 .,:;!?'"`@#$%&*()\[\]{}<>/\\|+=_~-]+(?<! )$
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title "{title}" didn't match the configured pattern.
+
+            Please follow these rules:
+            - Start with a lowercase English letter (a-z)
+            - Use only English letters, numbers, spaces, and allowed punctuation
+            - Do not end with a space
+            - Do not use emojis
+
+            Examples (valid):
+            - feat: add new API
+            - feat: fix bug #123
+            - feat: update action to v6 @user
+
+            Examples (invalid):
+            - feat: Capital start (upper case)
+            - feat: a  (too short)
+            - feat: trailing space␠  (trailing space)
+            - feat: emoji 🚀  (emoji not allowed)
+            - feat: 日本語 (english only allowed)
+
+      - name: Test PR title policy
+        if: ${{ !cancelled() && github.repository == 'nozomiishii/workflows' }}
+        run: node --test tests/pr-title-policy.test.mjs
 
       # ----------------------------------------------------------------
       # secret-scan
