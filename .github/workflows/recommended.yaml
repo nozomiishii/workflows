@@ -33,7 +33,7 @@ jobs:
       # GitHub 側にテンプレート変更機能はない: https://github.com/orgs/community/discussions/121757
       #   Revert "feat: add something" → revert: "feat: add something"
       - name: Format revert PR title
-        if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Revert "')
+        if: ${{ !cancelled() && github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Revert "') }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_TITLE: ${{ github.event.pull_request.title }}
@@ -56,6 +56,27 @@ jobs:
             revert
           # どの scope にもマッチする blacklist で、scope 付きタイトル (feat(api): 等) を全面禁止する
           disallowScopes: '.*'
+          subjectPattern: ^[a-z"][A-Za-z0-9 .,:;!?'"`@#$%&*()\[\]{}<>/\\|+=_~-]+(?<! )$
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title "{title}" didn't match the configured pattern.
+
+            Please follow these rules:
+            - Start with a lowercase English letter (a-z)
+            - Use only English letters, numbers, spaces, and allowed punctuation
+            - Do not end with a space
+            - Do not use emojis
+
+            Examples (valid):
+            - feat: add new API
+            - feat: fix bug #123
+            - feat: update action to v6 @user
+
+            Examples (invalid):
+            - feat: Capital start (upper case)
+            - feat: a  (too short)
+            - feat: trailing space␠  (trailing space)
+            - feat: emoji 🚀  (emoji not allowed)
+            - feat: 日本語 (english only allowed)
 
       # ----------------------------------------------------------------
       # secret-scan
