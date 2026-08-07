@@ -13,6 +13,12 @@ const validateStep = workflow.match(
 
 assert.ok(validateStep, 'Validate PR title step was not found');
 
+const formatStep = workflow.match(
+  /      - name: Format revert PR title\n(?<body>[\s\S]*?)(?=\n      - name: Validate PR title)/
+)?.groups.body;
+
+assert.ok(formatStep, 'Format revert PR title step was not found');
+
 function readScalar(name) {
   const value = validateStep.match(
     new RegExp(`^ {10}${name}: (?<value>.+)$`, 'm')
@@ -71,4 +77,15 @@ test('rejects a Japanese subject', () => {
 
 test('rejects an unsupported docs type', () => {
   assert.equal(accepts('docs: add stress threshold note'), false);
+});
+
+test('keeps the English subject guidance', () => {
+  assert.match(
+    validateStep,
+    /^ {10}subjectPatternError: \|\n[\s\S]*Start with a lowercase English letter/m
+  );
+});
+
+test('keeps revert title formatting after an earlier failure', () => {
+  assert.match(formatStep, /^ {8}if: \$\{\{ !cancelled\(\) && /m);
 });

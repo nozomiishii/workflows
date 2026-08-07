@@ -33,7 +33,7 @@ jobs:
       # GitHub 側にテンプレート変更機能はない: https://github.com/orgs/community/discussions/121757
       #   Revert "feat: add something" → revert: "feat: add something"
       - name: Format revert PR title
-        if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Revert "')
+        if: ${{ !cancelled() && github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Revert "') }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_TITLE: ${{ github.event.pull_request.title }}
