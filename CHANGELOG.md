@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.0.1](https://github.com/nozomiishii/workflows/compare/v4.0.0...v4.0.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* restore English PR title validation ([#97](https://github.com/nozomiishii/workflows/issues/97)) ([0b9a6f0](https://github.com/nozomiishii/workflows/commit/0b9a6f0d8bf228a5e95791af4dd6f9cb4a035c98))
+
+
+### Miscellaneous
+
+* update 1password/load-secrets-action action to v5 ([#95](https://github.com/nozomiishii/workflows/issues/95)) ([6e32531](https://github.com/nozomiishii/workflows/commit/6e325313567113fb069de7755ca93af43336105b))
+* update 1password/op docker tag to v2.38.1 ([#93](https://github.com/nozomiishii/workflows/issues/93)) ([16755cc](https://github.com/nozomiishii/workflows/commit/16755cc1ac58afd0549eb2f9966375d63fab77bd))
+* update dependency zizmor to v1.29.0 ([#96](https://github.com/nozomiishii/workflows/issues/96)) ([e636d39](https://github.com/nozomiishii/workflows/commit/e636d390905375fdfab80e06aba2445d23ac7a22))
+
 ## [4.0.0](https://github.com/nozomiishii/workflows/compare/v3.4.1...v4.0.0) (2026-08-02)
 
 
