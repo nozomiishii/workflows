@@ -23,6 +23,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
 
       # ----------------------------------------------------------------
@@ -77,6 +79,26 @@ jobs:
             - feat: trailing space␠  (trailing space)
             - feat: emoji 🚀  (emoji not allowed)
             - feat: 日本語 (english only allowed)
+
+      # GitHub MCP / Contents API は local Git hook を通らないため、PR の全 commit を server-side で再検査する。
+      - name: Validate PR commits
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+        env:
+          # renovate: datasource=npm depName=@nozomiishii/commitlint-config
+          COMMITLINT_CONFIG_VERSION: "2.1.0"
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -eu
+          policy_bin=$(cd "${RUNNER_TEMP}" && npx --yes \
+            --package "@nozomiishii/commitlint-config@${COMMITLINT_CONFIG_VERSION}" \
+            -c 'command -v nozo-commitlint')
+          policy_config=$(realpath "$(dirname "${policy_bin}")/../@nozomiishii/commitlint-config/dist/index.js")
+          test -f "${policy_config}"
+          git cat-file -e "${PR_BASE_SHA}^{commit}"
+          git cat-file -e "${PR_HEAD_SHA}^{commit}"
+          "${policy_bin}" --config "${policy_config}" \
+            --from "${PR_BASE_SHA}" --to "${PR_HEAD_SHA}" --verbose
 
       # ----------------------------------------------------------------
       # secret-scan
