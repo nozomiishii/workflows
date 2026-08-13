@@ -147,6 +147,14 @@ jobs:
             "https://raw.githubusercontent.com/nozomiishii/workflows/${sha}/.github/zizmor.yaml" \
             -o .github/zizmor.yaml
 
+      # Self hostedでも実行される想定かつ手元のPythonのツールチェーンはUVで揃えたいがUbuntu系のランナーにUVがないため
+      - name: Setup uv
+        if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
+        uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          # renovate: datasource=github-releases depName=astral-sh/uv
+          version: "0.12.3"
+
       # https://github.com/zizmorcore/zizmor
       #
       # To run locally, execute the following command:
@@ -157,4 +165,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           # renovate: datasource=pypi depName=zizmor
           ZIZMOR_VERSION: "1.29.0"
-        run: pipx run --spec "zizmor==${ZIZMOR_VERSION}" zizmor --persona auditor --config .github/zizmor.yaml .
+        run: uvx --from "zizmor==${ZIZMOR_VERSION}" zizmor --persona auditor --config .github/zizmor.yaml .
