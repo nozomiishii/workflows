@@ -147,8 +147,7 @@ jobs:
             "https://raw.githubusercontent.com/nozomiishii/workflows/${sha}/.github/zizmor.yaml" \
             -o .github/zizmor.yaml
 
-      # uv 一式 (binary / cache / tool dir) を RUNNER_TEMP に閉じるため、runner 側の
-      # プリインストール差に依存しない (ubuntu-slim と self-hosted のどちらにも uv の保証は無い)
+      # Self hostedでも実行される想定かつ手元のPythonのツールチェーンはUVで揃えたいがUbuntu系のランナーにUVがないため
       - name: Setup uv
         if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
         uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
