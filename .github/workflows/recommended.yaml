@@ -147,6 +147,15 @@ jobs:
             "https://raw.githubusercontent.com/nozomiishii/workflows/${sha}/.github/zizmor.yaml" \
             -o .github/zizmor.yaml
 
+      # uv 一式 (binary / cache / tool dir) を RUNNER_TEMP に閉じるため、runner 側の
+      # プリインストール差に依存しない (ubuntu-slim と self-hosted のどちらにも uv の保証は無い)
+      - name: Setup uv
+        if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
+        uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+        with:
+          # renovate: datasource=github-releases depName=astral-sh/uv
+          version: "0.12.3"
+
       # https://github.com/zizmorcore/zizmor
       #
       # To run locally, execute the following command:
@@ -157,4 +166,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           # renovate: datasource=pypi depName=zizmor
           ZIZMOR_VERSION: "1.29.0"
-        run: pipx run --spec "zizmor==${ZIZMOR_VERSION}" zizmor --persona auditor --config .github/zizmor.yaml .
+        run: uvx --from "zizmor==${ZIZMOR_VERSION}" zizmor --persona auditor --config .github/zizmor.yaml .
