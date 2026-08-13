@@ -23,6 +23,8 @@ The recommended entry point: runs PR title validation, secret scan, and workflow
 
 On `push` / `workflow_dispatch` events only the secret scan runs — PR title validation and workflow lint are gated to `pull_request` events.
 
+The job runs on `ubuntu-slim` by default. Callers can override the runner label with the `runs-on` input (e.g. `with: { runs-on: self-hosted }`). Keep the default GitHub-hosted runner in public repos — GitHub [discourages self-hosted runners on public repositories](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#hardening-for-self-hosted-runners).
+
 ```yaml
 name: recommended
 on:

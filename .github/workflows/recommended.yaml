@@ -2,6 +2,15 @@ name: recommended
 
 on:
   workflow_call:
+    inputs:
+      runs-on:
+        description: >-
+          Runner label for the required job. Keep the default GitHub-hosted
+          runner in public repos; self-hosted runners on public repos are
+          discouraged by GitHub's security hardening guide.
+        type: string
+        required: false
+        default: ubuntu-slim
 
 permissions: {}
 
@@ -13,7 +22,7 @@ jobs:
   # 全チェックを 1 job の step として直列実行する Preset workflow。
   # 設計 (課金・`!cancelled()`・required 集約) は docs/authoring-workflows.md を参照。
   required:
-    runs-on: ubuntu-slim
+    runs-on: ${{ inputs.runs-on }}
     timeout-minutes: 10
     permissions:
       contents: read
