@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/nozomiishii/workflows/compare/v4.1.0...v4.1.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* run zizmor via uv instead of pipx ([#103](https://github.com/nozomiishii/workflows/issues/103)) ([7208644](https://github.com/nozomiishii/workflows/commit/72086443d524339bad8b43229032e751744d1374))
+
 ## [4.1.0](https://github.com/nozomiishii/workflows/compare/v4.0.1...v4.1.0) (2026-08-13)
 
 
