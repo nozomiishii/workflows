@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.1.0](https://github.com/nozomiishii/workflows/compare/v4.0.1...v4.1.0) (2026-08-13)
+
+
+### Features
+
+* add runs-on input to recommended workflow ([#102](https://github.com/nozomiishii/workflows/issues/102)) ([98eaf13](https://github.com/nozomiishii/workflows/commit/98eaf13582517528816fc42fe71394ba1b42fc64))
+
+
+### Miscellaneous
+
+* update dorny/paths-filter action to v4.0.3 ([#98](https://github.com/nozomiishii/workflows/issues/98)) ([b53dc5c](https://github.com/nozomiishii/workflows/commit/b53dc5cbea8d62546f459aca844dae4e6c91b2cf))
+* update op:// refs for renamed 1Password vault ([#100](https://github.com/nozomiishii/workflows/issues/100)) ([8e70945](https://github.com/nozomiishii/workflows/commit/8e70945e097d2e80d8bc6c6fba9fee021eec0a17))
+
 ## [4.0.1](https://github.com/nozomiishii/workflows/compare/v4.0.0...v4.0.1) (2026-08-07)
 
 
