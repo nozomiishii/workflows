@@ -1,4 +1,6 @@
-name: recommended
+# PR の check 表示は <workflow名> / <caller job ID> / <内側 job ID> と合成される。
+# caller job ID (recommended) と同名だと重複表示になるため repo 名に合わせる
+name: workflows
 
 on:
   workflow_dispatch:
