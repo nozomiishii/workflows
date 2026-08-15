@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/nozomiishii/workflows/compare/v4.1.1...v4.2.0) (2026-08-15)
+
+
+### Features
+
+* unify tool setup with mise ([#105](https://github.com/nozomiishii/workflows/issues/105)) ([26e2158](https://github.com/nozomiishii/workflows/commit/26e2158435b53c3b9bf5a3816c44429f95e8a27d))
+
 ## [4.1.1](https://github.com/nozomiishii/workflows/compare/v4.1.0...v4.1.1) (2026-08-13)
 
 
