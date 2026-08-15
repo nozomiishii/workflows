@@ -1,4 +1,4 @@
-name: recommended
+name: workflows
 
 on:
   workflow_dispatch:

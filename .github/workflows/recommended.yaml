@@ -34,6 +34,20 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Setup mise
+        if: ${{ !cancelled() }}
+        uses: jdx/mise-action@3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518 # v4.2.5
+        env:
+          # renovate: datasource=node-version depName=node
+          NODE_VERSION: "24.19.0"
+          # renovate: datasource=github-releases depName=astral-sh/uv
+          UV_VERSION: "0.12.3"
+        with:
+          mise_toml: |
+            [tools]
+            node = "${{ env.NODE_VERSION }}"
+            uv = "${{ env.UV_VERSION }}"
+
       # ----------------------------------------------------------------
       # pull-request
       # ----------------------------------------------------------------
@@ -146,14 +160,6 @@ jobs:
           curl -sSfL \
             "https://raw.githubusercontent.com/nozomiishii/workflows/${sha}/.github/zizmor.yaml" \
             -o .github/zizmor.yaml
-
-      # Self hostedでも実行される想定かつ手元のPythonのツールチェーンはUVで揃えたいがUbuntu系のランナーにUVがないため
-      - name: Setup uv
-        if: ${{ !cancelled() && steps.changes.outputs.src == 'true' }}
-        uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
-        with:
-          # renovate: datasource=github-releases depName=astral-sh/uv
-          version: "0.12.3"
 
       # https://github.com/zizmorcore/zizmor
       #
