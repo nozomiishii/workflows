@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.1](https://github.com/nozomiishii/workflows/compare/v4.2.0...v4.2.1) (2026-08-16)
+
+
+### Bug Fixes
+
+* enable mise GitHub cache only on GitHub-hosted runners ([#107](https://github.com/nozomiishii/workflows/issues/107)) ([e181d62](https://github.com/nozomiishii/workflows/commit/e181d6229f1e06618d4c9ec5f3303257c2332245))
+
 ## [4.2.0](https://github.com/nozomiishii/workflows/compare/v4.1.1...v4.2.0) (2026-08-15)
 
 
