@@ -28,6 +28,18 @@ reusable workflow を呼び出すと、GitHub は check 名を `<caller-job-name
 
 ## Lint / 監査の方針
 
+### PR title — 正本は caller repo の commitlint 設定
+
+`recommended.yaml` の PR title 検証は、caller repo の `commitlint.config.ts` を `@nozomiishii/commitlint-config` の CLI に流すだけで、type / scope / subject のルールを workflow 側に持たない。commit hook と CI が同じ設定を読むので、ルールの変更は [nozomiishii/configs](https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config) の 1 箇所で完結する。
+
+`commitlint.config.ts` が無い repo は失敗させる。設定の入れ忘れを検出する方が、暗黙の既定値で通してしまうより望ましいという判断。
+
+検証するタイトルは event payload ではなく `gh pr view` で取る。直前の revert 変換 step が `GITHUB_TOKEN` でタイトルを書き換えても workflow は再発火せず payload が古いままになるため。タイトルを `GITHUB_OUTPUT` や `${{ }}` に通さないので、改行入りタイトルによる output 注入も成立しない。
+
+workflow が pin する `@nozomiishii/commitlint-config` の version は、caller repo が config を install していない時の fallback。`node_modules` がある repo では caller 側の pin が優先される。
+
+既製 action は使わない。[`wagoid/commitlint-github-action`](https://github.com/wagoid/commitlint-github-action) は commit しか lint できず PR タイトルに使えない。PR タイトル対応の action ([dreampulse](https://github.com/dreampulse/action-commitlint-pull-request-title) / [lw-ci](https://github.com/lw-ci/action-conventional-pull-request)) は shareable config を caller repo に install する前提で、`node_modules` を持たない repo でも動く現行設計を崩す。
+
 ### zizmor — 全 finding を CI で落とす
 
 `recommended.yaml` 内の zizmor は `--persona auditor` 固定で、`--min-severity` / `--no-exit-codes` は使わない。結果として、`informational` を含むあらゆる severity の finding で CI が赤くなる。
