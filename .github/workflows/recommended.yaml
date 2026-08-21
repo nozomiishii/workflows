@@ -73,15 +73,6 @@ jobs:
           # 次の step へ渡して同じ run 内で検証する
           printf 'title=%s\n' "$new_title" >> "$GITHUB_OUTPUT"
 
-      # https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config
-      #
-      # 検証ルール (type-enum / scope-empty / subject-case 等) の正本は caller repo の
-      # commitlint.config.ts。commit hook と CI が同じ設定を読むよう、workflow 側に
-      # ルールを複製しない。commitlint.config.ts が無い repo は失敗させ、設定の
-      # 入れ忘れをここで検出する。
-      #
-      # To run locally, execute the following command:
-      # printf '%s' 'chore: your pr title' | pnpm --package=@nozomiishii/commitlint-config dlx nozo-commitlint --config commitlint.config.ts --verbose
       - name: Validate PR title
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         env:
