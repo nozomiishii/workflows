@@ -28,6 +28,8 @@ PR title validation lints the title with the caller repo's own `commitlint.confi
 export default { extends: ["@nozomiishii/commitlint-config"] };
 ```
 
+The workflow pins a fallback version of `@nozomiishii/commitlint-config` for repos that don't install it. When the caller repo has the package in `node_modules`, that version wins — keep the caller's own pin up to date so the commit hook and CI resolve the same rules.
+
 On `push` / `workflow_dispatch` events only the secret scan runs — PR title validation and workflow lint are gated to `pull_request` events.
 
 The job runs on `ubuntu-slim` by default. Callers can override the runner label with the `runs-on` input (e.g. `with: { runs-on: self-hosted }`). Keep the default GitHub-hosted runner in public repos — GitHub [discourages self-hosted runners on public repositories](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#hardening-for-self-hosted-runners).
@@ -48,7 +50,7 @@ jobs:
   recommended:
     permissions:
       contents: read # required by actions/checkout
-      pull-requests: write # write: format revert PR titles, read: list PR files (dorny/paths-filter)
+      pull-requests: write # write: format revert PR titles, read: fetch PR titles / list PR files (dorny/paths-filter)
       actions: read # required by zizmor persona audits and referenced_workflows resolution
     uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha> # vX.Y.Z
 ```

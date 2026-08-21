@@ -26,7 +26,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      pull-requests: write # write: format revert PR titles, read: list PR files (dorny/paths-filter)
+      pull-requests: write # write: format revert PR titles, read: fetch PR titles / list PR files (dorny/paths-filter)
       actions: read # required by zizmor persona audits and referenced_workflows resolution
     steps:
       - name: Checkout code
@@ -59,7 +59,6 @@ jobs:
       # GitHub 側にテンプレート変更機能はない: https://github.com/orgs/community/discussions/121757
       #   Revert "feat: add something" → revert: "feat: add something"
       - name: Format revert PR title
-        id: revert-title
         if: ${{ !cancelled() && github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Revert "') }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,16 +68,15 @@ jobs:
         run: |
           new_title="revert: ${PR_TITLE#Revert }"
           gh pr edit "$PR_NUMBER" --title "$new_title" --repo "$REPO"
-          # GITHUB_TOKEN での編集は workflow を再発火しないため、変換後のタイトルを
-          # 次の step へ渡して同じ run 内で検証する
-          printf 'title=%s\n' "$new_title" >> "$GITHUB_OUTPUT"
 
       - name: Validate PR title
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         env:
           # renovate: datasource=npm depName=@nozomiishii/commitlint-config
           COMMITLINT_CONFIG_VERSION: "2.2.0"
-          PR_TITLE: ${{ steps.revert-title.outputs.title || github.event.pull_request.title }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
         # npx は cwd の package.json を読むため、caller repo の devEngines / engines が
         # runner の Node と一致しないと lint 前に落ちる。install と binary の解決は
         # RUNNER_TEMP で行い、lint だけ workspace で実行する
@@ -87,8 +85,9 @@ jobs:
             echo '::error::commitlint.config.ts not found in the repository root. Create it with: export default { extends: ["@nozomiishii/commitlint-config"] };'
             exit 1
           fi
+          pr_title=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json title --jq .title)
           bin=$(cd "${RUNNER_TEMP}" && npx --yes --package "@nozomiishii/commitlint-config@${COMMITLINT_CONFIG_VERSION}" -c 'command -v nozo-commitlint')
-          printf '%s' "${PR_TITLE}" | "${bin}" \
+          printf '%s' "${pr_title}" | "${bin}" \
             --config commitlint.config.ts \
             --help-url https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config \
             --verbose

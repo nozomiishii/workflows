@@ -28,6 +28,8 @@ PR title 検証は caller repo 自身の `commitlint.config.ts` ([`@nozomiishii/
 export default { extends: ["@nozomiishii/commitlint-config"] };
 ```
 
+workflow 側は `@nozomiishii/commitlint-config` の fallback version を pin しています。caller repo が `node_modules` に同 package を持つ場合は caller 側の version が優先されるため、commit hook と CI が同じルールを解決するよう caller 側の pin も更新してください。
+
 `push` / `workflow_dispatch` イベントでは secret scan だけが走ります — PR title 検証と workflow lint は `pull_request` イベント限定です。
 
 ジョブはデフォルトで `ubuntu-slim` で実行されます。`runs-on` input で runner label を変更できます(例: `with: { runs-on: self-hosted }`)。public repo では GitHub が [self-hosted runner の使用を非推奨としている](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#hardening-for-self-hosted-runners)ため、デフォルトの GitHub-hosted runner を維持してください。
@@ -48,7 +50,7 @@ jobs:
   recommended:
     permissions:
       contents: read # actions/checkout に必要
-      pull-requests: write # write: revert PR タイトルの自動変換, read: PR ファイル一覧の取得 (dorny/paths-filter)
+      pull-requests: write # write: revert PR タイトルの自動変換, read: PR タイトルの取得 / PR ファイル一覧の取得 (dorny/paths-filter)
       actions: read # zizmor persona audits と referenced_workflows の解決に必要
     uses: nozomiishii/workflows/.github/workflows/recommended.yaml@<sha> # vX.Y.Z
 ```
