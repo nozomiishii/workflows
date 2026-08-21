@@ -26,7 +26,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      pull-requests: write # write: format revert PR titles, read: validate PR titles / list PR files (dorny/paths-filter)
+      pull-requests: write # write: format revert PR titles, read: list PR files (dorny/paths-filter)
       actions: read # required by zizmor persona audits and referenced_workflows resolution
     steps:
       - name: Checkout code
@@ -59,6 +59,7 @@ jobs:
       # GitHub 側にテンプレート変更機能はない: https://github.com/orgs/community/discussions/121757
       #   Revert "feat: add something" → revert: "feat: add something"
       - name: Format revert PR title
+        id: revert-title
         if: ${{ !cancelled() && github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Revert "') }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -68,41 +69,38 @@ jobs:
         run: |
           new_title="revert: ${PR_TITLE#Revert }"
           gh pr edit "$PR_NUMBER" --title "$new_title" --repo "$REPO"
+          # GITHUB_TOKEN での編集は workflow を再発火しないため、変換後のタイトルを
+          # 次の step へ渡して同じ run 内で検証する
+          printf 'title=%s\n' "$new_title" >> "$GITHUB_OUTPUT"
 
+      # https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config
+      #
+      # 検証ルール (type-enum / scope-empty / subject-case 等) の正本は caller repo の
+      # commitlint.config.ts。commit hook と CI が同じ設定を読むよう、workflow 側に
+      # ルールを複製しない。commitlint.config.ts が無い repo は失敗させ、設定の
+      # 入れ忘れをここで検出する。
+      #
+      # To run locally, execute the following command:
+      # printf '%s' 'chore: your pr title' | pnpm --package=@nozomiishii/commitlint-config dlx nozo-commitlint --config commitlint.config.ts --verbose
       - name: Validate PR title
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
-        uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          types: |
-            feat
-            fix
-            chore
-            revert
-          # どの scope にもマッチする blacklist で、scope 付きタイトル (feat(api): 等) を全面禁止する
-          disallowScopes: '.*'
-          subjectPattern: ^[a-z"][A-Za-z0-9 .,:;!?'"`@#$%&*()\[\]{}<>/\\|+=_~-]+(?<! )$
-          subjectPatternError: |
-            The subject "{subject}" found in the pull request title "{title}" didn't match the configured pattern.
-
-            Please follow these rules:
-            - Start with a lowercase English letter (a-z)
-            - Use only English letters, numbers, spaces, and allowed punctuation
-            - Do not end with a space
-            - Do not use emojis
-
-            Examples (valid):
-            - feat: add new API
-            - feat: fix bug #123
-            - feat: update action to v6 @user
-
-            Examples (invalid):
-            - feat: Capital start (upper case)
-            - feat: a  (too short)
-            - feat: trailing space␠  (trailing space)
-            - feat: emoji 🚀  (emoji not allowed)
-            - feat: 日本語 (english only allowed)
+          # renovate: datasource=npm depName=@nozomiishii/commitlint-config
+          COMMITLINT_CONFIG_VERSION: "2.2.0"
+          PR_TITLE: ${{ steps.revert-title.outputs.title || github.event.pull_request.title }}
+        # npx は cwd の package.json を読むため、caller repo の devEngines / engines が
+        # runner の Node と一致しないと lint 前に落ちる。install と binary の解決は
+        # RUNNER_TEMP で行い、lint だけ workspace で実行する
+        run: |
+          if [ ! -f commitlint.config.ts ]; then
+            echo '::error::commitlint.config.ts not found in the repository root. Create it with: export default { extends: ["@nozomiishii/commitlint-config"] };'
+            exit 1
+          fi
+          bin=$(cd "${RUNNER_TEMP}" && npx --yes --package "@nozomiishii/commitlint-config@${COMMITLINT_CONFIG_VERSION}" -c 'command -v nozo-commitlint')
+          printf '%s' "${PR_TITLE}" | "${bin}" \
+            --config commitlint.config.ts \
+            --help-url https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config \
+            --verbose
 
       # ----------------------------------------------------------------
       # secret-scan
