@@ -48,9 +48,6 @@ jobs:
           # self-hosted はマシンの ~/.local/share/mise が永続キャッシュとして機能するため、
           # 数百 MB の GitHub cache 保存がハング・job timeout の原因になる。GitHub-hosted のみ有効化する。
           cache: ${{ runner.environment == 'github-hosted' }}
-          # gh は shared zizmor config の取得と PR タイトル操作が使う。環境のものを暗黙に
-          # 使わず宣言する。self-hosted は mise の shim が PATH 先頭に来るため、宣言が無いと
-          # shim が「No version is set」で止まる
           mise_toml: |
             [tools]
             node = "${{ env.NODE_VERSION }}"
