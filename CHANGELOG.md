@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.3.0](https://github.com/nozomiishii/workflows/compare/v4.2.1...v4.3.0) (2026-08-23)
+
+
+### Features
+
+* validate PR titles with the caller's commitlint config ([#113](https://github.com/nozomiishii/workflows/issues/113)) ([6cd4cac](https://github.com/nozomiishii/workflows/commit/6cd4cac6d52d713d0e39ae8ea5de63121e805425))
+
+
+### Bug Fixes
+
+* declare gh in the recommended workflow toolchain ([#115](https://github.com/nozomiishii/workflows/issues/115)) ([b757784](https://github.com/nozomiishii/workflows/commit/b7577840fc3a0bd96b1f69240630a701801cbe76))
+
+
+### Miscellaneous
+
+* make the docs readable at a glance ([#112](https://github.com/nozomiishii/workflows/issues/112)) ([fb64df8](https://github.com/nozomiishii/workflows/commit/fb64df85a5abe73dd6e916cb445ec8ac78c5e63e))
+* update 1password/load-secrets-action action to v5.0.1 ([#114](https://github.com/nozomiishii/workflows/issues/114)) ([6bab2ec](https://github.com/nozomiishii/workflows/commit/6bab2ecb902b7f273ea241903d93c8280ac0ddff))
+* update all non-major dependencies ([#111](https://github.com/nozomiishii/workflows/issues/111)) ([84ea975](https://github.com/nozomiishii/workflows/commit/84ea9759977a0173e920da5536255ca183a6525d))
+* update dependency astral-sh/uv to v0.12.4 ([#109](https://github.com/nozomiishii/workflows/issues/109)) ([b55187b](https://github.com/nozomiishii/workflows/commit/b55187b48dde10870f7cd4dbd7f342a97dbb0c08))
+
 ## [4.2.1](https://github.com/nozomiishii/workflows/compare/v4.2.0...v4.2.1) (2026-08-16)
 
 
