@@ -42,6 +42,8 @@ jobs:
           NODE_VERSION: "24.19.0"
           # renovate: datasource=github-releases depName=astral-sh/uv
           UV_VERSION: "0.12.5"
+          # renovate: datasource=github-releases depName=cli/cli
+          GH_VERSION: "2.97.0"
         with:
           # self-hosted はマシンの ~/.local/share/mise が永続キャッシュとして機能するため、
           # 数百 MB の GitHub cache 保存がハング・job timeout の原因になる。GitHub-hosted のみ有効化する。
@@ -50,6 +52,7 @@ jobs:
             [tools]
             node = "${{ env.NODE_VERSION }}"
             uv = "${{ env.UV_VERSION }}"
+            gh = "${{ env.GH_VERSION }}"
 
       # ----------------------------------------------------------------
       # pull-request
