@@ -76,7 +76,7 @@ jobs:
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         env:
           # renovate: datasource=npm depName=@nozomiishii/commitlint-config
-          COMMITLINT_CONFIG_VERSION: "2.2.0"
+          COMMITLINT_CONFIG_VERSION: "2.3.1"
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REPO: ${{ github.repository }}
