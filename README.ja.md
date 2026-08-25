@@ -21,14 +21,7 @@ nozomiishii の各プロジェクトで共有する、再利用可能な GitHub 
 
 推奨のエントリポイント: PR title 検証・secret scan・workflow lint(actionlint + zizmor)を1つの `ubuntu-slim` ジョブで実行します。GitHub Actions の課金はジョブごとに分単位で切り上げられるため、1分未満のチェックを workflow ごとに分けると課金だけが積み上がります。このプリセットは required check を `recommended / required` の1つに集約します。各チェック step は `if: ${{ !cancelled() }}` 付きで、1つのチェックが失敗しても他のチェックの指摘は隠れません。
 
-PR title 検証は caller repo 自身の `commitlint.config.ts` ([`@nozomiishii/commitlint-config`](https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config)) でタイトルを lint します。commit hook と CI が同じ設定を読むため、ルールの正本は commitlint 側の 1 箇所です。caller 側は repository root に `commitlint.config.ts` が必要で、無い場合はこのチェックが失敗します(設定の入れ忘れをここで検出します):
-
-```ts
-// commitlint.config.ts
-export default { extends: ["@nozomiishii/commitlint-config"] };
-```
-
-workflow 側は `@nozomiishii/commitlint-config` の fallback version を pin しています。caller repo が `node_modules` に同 package を持つ場合は caller 側の version が優先されるため、commit hook と CI が同じルールを解決するよう caller 側の pin も更新してください。
+PR title 検証は [`@nozomiishii/commitlint-config`](https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config) の同梱 config でタイトルを lint します。workflow 側が同 package の `nozo-commitlint` CLI を version 固定で install し、`--config` を渡さずに実行するため、caller 側に `commitlint.config.ts` も `package.json` も `node_modules` も要りません(workflow ファイルしか無い repo でも通ります)。ルールの正本は 1 箇所で、ルール変更は caller が workflow ref を上げた時点で反映されます。
 
 `push` / `workflow_dispatch` イベントでは secret scan だけが走ります — PR title 検証と workflow lint は `pull_request` イベント限定です。
 

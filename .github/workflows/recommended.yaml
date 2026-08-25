@@ -44,6 +44,8 @@ jobs:
           UV_VERSION: "0.12.5"
           # renovate: datasource=github-releases depName=cli/cli
           GH_VERSION: "2.98.0"
+          # renovate: datasource=npm depName=@nozomiishii/commitlint-config
+          COMMITLINT_CONFIG_VERSION: "2.3.1"
         with:
           # self-hosted はマシンの ~/.local/share/mise が永続キャッシュとして機能するため、
           # 数百 MB の GitHub cache 保存がハング・job timeout の原因になる。GitHub-hosted のみ有効化する。
@@ -53,6 +55,7 @@ jobs:
             node = "${{ env.NODE_VERSION }}"
             uv = "${{ env.UV_VERSION }}"
             gh = "${{ env.GH_VERSION }}"
+            "npm:@nozomiishii/commitlint-config" = "${{ env.COMMITLINT_CONFIG_VERSION }}"
 
       # ----------------------------------------------------------------
       # pull-request
@@ -75,23 +78,12 @@ jobs:
       - name: Validate PR title
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         env:
-          # renovate: datasource=npm depName=@nozomiishii/commitlint-config
-          COMMITLINT_CONFIG_VERSION: "2.3.1"
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REPO: ${{ github.repository }}
-        # npx は cwd の package.json を読むため、caller repo の devEngines / engines が
-        # runner の Node と一致しないと lint 前に落ちる。install と binary の解決は
-        # RUNNER_TEMP で行い、lint だけ workspace で実行する
         run: |
-          if [ ! -f commitlint.config.ts ]; then
-            echo '::error::commitlint.config.ts not found in the repository root. Create it with: export default { extends: ["@nozomiishii/commitlint-config"] };'
-            exit 1
-          fi
           pr_title=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json title --jq .title)
-          bin=$(cd "${RUNNER_TEMP}" && npx --yes --package "@nozomiishii/commitlint-config@${COMMITLINT_CONFIG_VERSION}" -c 'command -v nozo-commitlint')
-          printf '%s' "${pr_title}" | "${bin}" \
-            --config commitlint.config.ts \
+          printf '%s' "${pr_title}" | nozo-commitlint \
             --help-url https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config \
             --verbose
 
