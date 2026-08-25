@@ -21,14 +21,7 @@ Reusable GitHub Actions workflows shared across nozomiishii projects.
 
 The recommended entry point: runs PR title validation, secret scan, and workflow lint (actionlint + zizmor) in one `ubuntu-slim` job. GitHub Actions bills per job with per-minute rounding, so sub-minute checks split across workflows multiply billable minutes; this preset reports a single required check (`recommended / required`) instead. Each check step runs with `if: ${{ !cancelled() }}`, so one failing check doesn't hide the others' findings.
 
-PR title validation lints the title with the caller repo's own `commitlint.config.ts` (via [`@nozomiishii/commitlint-config`](https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config)), so the commit hook and CI share a single source of truth. Callers need `commitlint.config.ts` in the repository root — the check fails without it, which is how a missing config gets noticed:
-
-```ts
-// commitlint.config.ts
-export default { extends: ["@nozomiishii/commitlint-config"] };
-```
-
-The workflow pins a fallback version of `@nozomiishii/commitlint-config` for repos that don't install it. When the caller repo has the package in `node_modules`, that version wins — keep the caller's own pin up to date so the commit hook and CI resolve the same rules.
+PR title validation lints the title with the config bundled in [`@nozomiishii/commitlint-config`](https://github.com/nozomiishii/configs/tree/main/packages/commitlint-config). The workflow installs that package's `nozo-commitlint` CLI at a pinned version and runs it without `--config`, so the caller repo needs no `commitlint.config.ts`, no `package.json`, and no `node_modules` — a repo with nothing but workflow files passes the check. Rules live in a single place, and a rule change reaches callers when they bump the workflow ref.
 
 On `push` / `workflow_dispatch` events only the secret scan runs — PR title validation and workflow lint are gated to `pull_request` events.
 
