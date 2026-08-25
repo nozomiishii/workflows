@@ -34,6 +34,8 @@ reusable workflow を呼び出すと、GitHub は check 名を `<caller-job-name
 
 CLI は mise の npm backend (`npm:@nozomiishii/commitlint-config`) で install し、PATH の `nozo-commitlint` を直接実行する。npx で caller repo の cwd から binary を解決すると、caller の devEngines / engines が runner の Node と一致しない repo で lint 前に落ちるため。
 
+npm backend の installer は `MISE_NPM_PACKAGE_MANAGER: npm` で npm CLI に固定する。mise 既定の embedded installer (aube) は runner で確認プロンプトに落ち、`MISE_YES` でも抑止できずに `user aborted` で install が失敗する。
+
 検証するタイトルは event payload ではなく `gh pr view` で取る。直前の revert 変換 step が `GITHUB_TOKEN` でタイトルを書き換えても workflow は再発火せず payload が古いままになるため。タイトルを `GITHUB_OUTPUT` や `${{ }}` に通さないので、改行入りタイトルによる output 注入も成立しない。
 
 既製 action は使わない。[`wagoid/commitlint-github-action`](https://github.com/wagoid/commitlint-github-action) は commit しか lint できず PR タイトルに使えない。PR タイトル対応の action ([dreampulse](https://github.com/dreampulse/action-commitlint-pull-request-title) / [lw-ci](https://github.com/lw-ci/action-conventional-pull-request)) は shareable config を caller repo に install する前提で、`node_modules` を持たない repo でも動く現行設計を崩す。
