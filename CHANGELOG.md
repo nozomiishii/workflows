@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.4.0](https://github.com/nozomiishii/workflows/compare/v4.3.0...v4.4.0) (2026-08-25)
+
+
+### Features
+
+* lint pr titles with the bundled commitlint config ([#118](https://github.com/nozomiishii/workflows/issues/118)) ([f585e75](https://github.com/nozomiishii/workflows/commit/f585e757fb738881f371766b3376ca1ebcbf21fb))
+
+
+### Miscellaneous
+
+* update dependency @nozomiishii/commitlint-config to v2.3.1 ([#119](https://github.com/nozomiishii/workflows/issues/119)) ([8e8ad93](https://github.com/nozomiishii/workflows/commit/8e8ad930cea35826272aefb009548fa9c0a5f183))
+* update dependency cli/cli to v2.98.0 ([#116](https://github.com/nozomiishii/workflows/issues/116)) ([fdadfec](https://github.com/nozomiishii/workflows/commit/fdadfec1d6b116000ee742154adef1aacd02190e))
+
 ## [4.3.0](https://github.com/nozomiishii/workflows/compare/v4.2.1...v4.3.0) (2026-08-23)
 
 
