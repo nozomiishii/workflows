@@ -34,7 +34,7 @@ reusable workflow を呼び出すと、GitHub は check 名を `<caller-job-name
 
 CLI は mise の npm backend (`npm:@nozomiishii/commitlint-config`) で install し、PATH の `nozo-commitlint` を直接実行する。npx で caller repo の cwd から binary を解決すると、caller の devEngines / engines が runner の Node と一致しない repo で lint 前に落ちるため。
 
-npm backend の installer は `MISE_NPM_PACKAGE_MANAGER: npm` で npm CLI に固定する。mise 既定の embedded installer (aube) は runner で確認プロンプトに落ち、`MISE_YES` でも抑止できずに `user aborted` で install が失敗する。
+`@nozomiishii/commitlint-config` は weekly download が少なく、mise 既定の installer (aube) のダウンロード数ゲートに掛かる。runner ではその確認プロンプトが `user aborted` になって install が失敗するため、tool options で `allow_low_downloads = true` を渡す。`MISE_YES` では抑止できない。
 
 検証するタイトルは event payload ではなく `gh pr view` で取る。直前の revert 変換 step が `GITHUB_TOKEN` でタイトルを書き換えても workflow は再発火せず payload が古いままになるため。タイトルを `GITHUB_OUTPUT` や `${{ }}` に通さないので、改行入りタイトルによる output 注入も成立しない。
 
