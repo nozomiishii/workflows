@@ -46,8 +46,6 @@ jobs:
           GH_VERSION: "2.98.0"
           # renovate: datasource=npm depName=@nozomiishii/commitlint-config
           COMMITLINT_CONFIG_VERSION: "2.3.1"
-          # mise 既定の aube installer は runner で確認プロンプトに落ちるため npm CLI で install する
-          MISE_NPM_PACKAGE_MANAGER: npm
         with:
           # self-hosted はマシンの ~/.local/share/mise が永続キャッシュとして機能するため、
           # 数百 MB の GitHub cache 保存がハング・job timeout の原因になる。GitHub-hosted のみ有効化する。
@@ -57,7 +55,8 @@ jobs:
             node = "${{ env.NODE_VERSION }}"
             uv = "${{ env.UV_VERSION }}"
             gh = "${{ env.GH_VERSION }}"
-            "npm:@nozomiishii/commitlint-config" = "${{ env.COMMITLINT_CONFIG_VERSION }}"
+            # 個人パッケージは aube のダウンロード数ゲートに掛かり、runner では確認プロンプトが user aborted になる
+            "npm:@nozomiishii/commitlint-config" = { version = "${{ env.COMMITLINT_CONFIG_VERSION }}", allow_low_downloads = true }
 
       # ----------------------------------------------------------------
       # pull-request
