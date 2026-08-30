@@ -100,7 +100,7 @@ jobs:
         if: ${{ !cancelled() }}
         env:
           # renovate: datasource=npm depName=@secretlint/quick-start
-          SECRETLINT_VERSION: "13.0.4"
+          SECRETLINT_VERSION: "13.0.5"
         # npx は cwd の package.json を読むため、caller repo の devEngines / engines が
         # runner の Node と一致しないと scan 前に落ちる。install と binary の解決は
         # RUNNER_TEMP で行い、scan だけ workspace で実行する
