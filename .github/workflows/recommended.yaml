@@ -41,7 +41,7 @@ jobs:
           # renovate: datasource=node-version depName=node
           NODE_VERSION: "24.20.0"
           # renovate: datasource=github-releases depName=astral-sh/uv
-          UV_VERSION: "0.12.6"
+          UV_VERSION: "0.12.7"
           # renovate: datasource=github-releases depName=cli/cli
           GH_VERSION: "2.98.0"
           # renovate: datasource=npm depName=@nozomiishii/commitlint-config
