@@ -45,7 +45,7 @@ jobs:
           # renovate: datasource=github-releases depName=cli/cli
           GH_VERSION: "2.98.0"
           # renovate: datasource=npm depName=@nozomiishii/commitlint-config
-          COMMITLINT_CONFIG_VERSION: "2.4.0"
+          COMMITLINT_CONFIG_VERSION: "2.5.0"
         with:
           # self-hosted はマシンの ~/.local/share/mise が永続キャッシュとして機能するため、
           # 数百 MB の GitHub cache 保存がハング・job timeout の原因になる。GitHub-hosted のみ有効化する。
