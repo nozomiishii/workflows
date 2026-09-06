@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.4.1](https://github.com/nozomiishii/workflows/compare/v4.4.0...v4.4.1) (2026-09-06)
+
+
+### Miscellaneous
+
+* install the commitlint cli with aube ([#120](https://github.com/nozomiishii/workflows/issues/120)) ([81eeccb](https://github.com/nozomiishii/workflows/commit/81eeccbe3420cddb26373f0c0d058efb5e43197c))
+* update dependency @nozomiishii/commitlint-config to v2.4.0 ([#128](https://github.com/nozomiishii/workflows/issues/128)) ([0189166](https://github.com/nozomiishii/workflows/commit/0189166b3d8ab82ef8e2e2c9b12bb04fb4ee2c14))
+* update dependency @nozomiishii/commitlint-config to v2.5.0 ([#131](https://github.com/nozomiishii/workflows/issues/131)) ([3b5d9f0](https://github.com/nozomiishii/workflows/commit/3b5d9f0a707132af77b26eb484ff708d84b73fc7))
+* update dependency @secretlint/quick-start to v13.0.5 ([#125](https://github.com/nozomiishii/workflows/issues/125)) ([19eb32f](https://github.com/nozomiishii/workflows/commit/19eb32f7622eca234e2e465d36bfa82d2d797040))
+* update dependency astral-sh/uv to v0.12.6 ([#123](https://github.com/nozomiishii/workflows/issues/123)) ([2d17877](https://github.com/nozomiishii/workflows/commit/2d1787721d8410805831b761a1dc44e283782fe0))
+* update dependency astral-sh/uv to v0.12.7 ([#127](https://github.com/nozomiishii/workflows/issues/127)) ([2c2f47d](https://github.com/nozomiishii/workflows/commit/2c2f47d5b11233d51b5b82c6f041ccc032675e1f))
+* update dependency astral-sh/uv to v0.12.8 ([#130](https://github.com/nozomiishii/workflows/issues/130)) ([422ba3b](https://github.com/nozomiishii/workflows/commit/422ba3b48044b664f1bd9d297dbe6c205d5e8bfc))
+* update dependency astral-sh/uv to v0.12.9 ([#132](https://github.com/nozomiishii/workflows/issues/132)) ([377bb05](https://github.com/nozomiishii/workflows/commit/377bb05d1abad10689e53b0e6cb415e83f691991))
+* update dependency cli/cli to v2.100.0 ([#134](https://github.com/nozomiishii/workflows/issues/134)) ([570ae9f](https://github.com/nozomiishii/workflows/commit/570ae9fa38950723e78eed3e70a790e3ce526a79))
+* update dependency cli/cli to v2.99.0 ([#133](https://github.com/nozomiishii/workflows/issues/133)) ([a19b854](https://github.com/nozomiishii/workflows/commit/a19b85429d202eb47df3ed837e9addeafa983187))
+* update jdx/mise-action action to v4.3.0 ([#122](https://github.com/nozomiishii/workflows/issues/122)) ([6bb7091](https://github.com/nozomiishii/workflows/commit/6bb70910a849f2bb8c2256c67557337cd4eb8cf9))
+* update node.js to v24.20.0 ([#124](https://github.com/nozomiishii/workflows/issues/124)) ([6e037e3](https://github.com/nozomiishii/workflows/commit/6e037e30bebbc9ad9c43b47fb1ab980bdaa86e95))
+
 ## [4.4.0](https://github.com/nozomiishii/workflows/compare/v4.3.0...v4.4.0) (2026-08-25)
 
 
