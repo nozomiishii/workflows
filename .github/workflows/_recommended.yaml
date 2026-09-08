@@ -20,4 +20,4 @@ jobs:
       contents: read # required by actions/checkout
       pull-requests: write # write: format revert PR titles, read: fetch PR titles / list PR files (dorny/paths-filter)
       actions: read # required by zizmor persona audits and referenced_workflows resolution
-    uses: ./.github/workflows/recommended.yaml
+    uses: $/.github/workflows/recommended.yaml
