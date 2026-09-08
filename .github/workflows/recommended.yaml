@@ -45,7 +45,7 @@ jobs:
           # renovate: datasource=github-releases depName=cli/cli
           GH_VERSION: "2.100.0"
           # renovate: datasource=npm depName=@nozomiishii/commitlint-config
-          COMMITLINT_CONFIG_VERSION: "2.5.0"
+          COMMITLINT_CONFIG_VERSION: "2.6.0"
           # renovate: datasource=github-releases depName=kjanat/actionlint
           ACTIONLINT_VERSION: "1.15.1"
         with:
