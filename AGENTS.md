@@ -13,7 +13,7 @@ nozomiishii の全 repo で共有する GitHub Actions reusable workflow を集�
 | prefix | 層 | 例 | 意味 |
 |---|---|---|---|
 | なし | Library (reusable) | `recommended.yaml` | 外部 caller が `uses: nozomiishii/workflows/.github/workflows/<name>.yaml@<sha>` で呼ぶ公開 API。`on: workflow_call:` 必須 |
-| `_` | Dogfood (self-CI) | `_recommended.yaml` | 本 repo 自身の PR/push に対して、Library を `./` で呼ぶ自 caller。他 repo の caller と同じ形式で自身を検証する |
+| `_` | Dogfood (self-CI) | `_recommended.yaml` | 本 repo 自身の PR/push に対して、Library を `$/` で呼ぶ自 caller。他 repo の caller と同じ形式で自身を検証する |
 | `__` | Repo-own (meta) | `__release.yaml` | 外部 caller から参照されない、本 repo 運営専用。Release Please 等の内部自動化 |
 
 - 0 本 = 外向き（caller API）
