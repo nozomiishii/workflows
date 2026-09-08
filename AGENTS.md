@@ -40,6 +40,10 @@ CLI は mise の npm backend (`npm:@nozomiishii/commitlint-config`) で install 
 
 既製 action は使わない。[`wagoid/commitlint-github-action`](https://github.com/wagoid/commitlint-github-action) は commit しか lint できず PR タイトルに使えない。PR タイトル対応の action ([dreampulse](https://github.com/dreampulse/action-commitlint-pull-request-title) / [lw-ci](https://github.com/lw-ci/action-conventional-pull-request)) は shareable config を caller repo に install する前提で、`node_modules` を持たない repo でも動く現行設計を崩す。
 
+### actionlint — kjanat fork を mise で取得する
+
+`recommended.yaml` の actionlint は upstream の rhysd/actionlint ではなく、fork の [kjanat/actionlint](https://github.com/kjanat/actionlint) を Setup mise step の `github:kjanat/actionlint` で取得する。fork を選んだ理由、取得方法の選定、attestation 検証で検出できる範囲、upstream へ戻す条件は [ADR](<docs/decisions/actionlint は kjanat fork を mise の github backend で取得する.md>) を参照。
+
 ### zizmor — 全 finding を CI で落とす
 
 `recommended.yaml` 内の zizmor は `--persona auditor` 固定で、`--min-severity` / `--no-exit-codes` は使わない。結果として、`informational` を含むあらゆる severity の finding で CI が赤くなる。
