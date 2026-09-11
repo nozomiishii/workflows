@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.5.1](https://github.com/nozomiishii/workflows/compare/v4.5.0...v4.5.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* disable the self-hosted-runner audit in the shared zizmor config ([#142](https://github.com/nozomiishii/workflows/issues/142)) ([2345afc](https://github.com/nozomiishii/workflows/commit/2345afc12256e2c70bba9308213c1563677bec93))
+
+
+### Miscellaneous
+
+* update dependency @nozomiishii/commitlint-config to v2.6.0 ([#139](https://github.com/nozomiishii/workflows/issues/139)) ([d76cc28](https://github.com/nozomiishii/workflows/commit/d76cc28fb325c7418191cba948e23d0b84810fdc))
+* update node.js to v24.21.0 ([#141](https://github.com/nozomiishii/workflows/issues/141)) ([2ff040a](https://github.com/nozomiishii/workflows/commit/2ff040aff3a3cfa73f38ad0409adb39821b28663))
+
 ## [4.5.0](https://github.com/nozomiishii/workflows/compare/v4.4.0...v4.5.0) (2026-09-08)
 
 
