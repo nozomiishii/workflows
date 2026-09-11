@@ -54,13 +54,7 @@ dogfood の `_<name>.yaml` でもこれらの規則を守る（本 repo の CI �
 
 ## `.github/zizmor.yaml` のコメント書式
 
-ignore / disable / allowlist を追加する各 rule には、なぜその rule を適用外にしたかを日本語で明示するコメントを付ける。書式は次の 3 要素:
-
-- ルール概要: その audit が何を検出するかを 1 文で
-- メリット vs デメリット比較: rule に従う場合の benefit と、本 repo の文脈で発生する cost を対比する
-- 結論: この repo ではどちらが上回るかの判断と採った対応（`disable` / `ignore` / `config.allow` 等）
-
-benefit をゼロ扱いせず、存在を認めた上で repo の文脈では上回らないという形で書く。将来 repo の事情が変わった時に再評価しやすくなる。実例は [.github/zizmor.yaml](../.github/zizmor.yaml) の `anonymous-definition` コメントを参照。
+ignore / disable / allowlist を追加する rule には、その rule を外して何を許すかを 1 行で書く。例: `# job の name: は付けても付けなくてもよい`。理由はコメントに書かず、rule を追加した PR に残す。
 
 ## 新しい reusable workflow を追加する時
 
