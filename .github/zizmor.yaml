@@ -19,3 +19,12 @@ rules:
     config:
       allow:
         - OP_SERVICE_ACCOUNT_TOKEN
+
+  # self-hosted-runner: runs-on の self-hosted ラベルだけを見て、repo の可視性や runner の
+  # 素性は見ない監査。public repo で信頼できないコードが自前の runner で動く危険に気付ける
+  # メリットはあるが、caller repo は全て private で、意図して自宅の self-hosted runner に
+  # 載せているため、job を足すたびに inline ignore を書くコストだけが残る。
+  # 守りたい「repo を public に変えた瞬間」は、有効のままでも inline ignore 済みで検知できず、
+  # GitHub 側のイベントで見る。rule を全体 off にする。
+  self-hosted-runner:
+    disable: true
