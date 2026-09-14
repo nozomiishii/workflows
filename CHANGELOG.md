@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.5.2](https://github.com/nozomiishii/workflows/compare/v4.5.1...v4.5.2) (2026-09-14)
+
+
+### Miscellaneous
+
+* update dependency @nozomiishii/commitlint-config to v2.7.0 ([#150](https://github.com/nozomiishii/workflows/issues/150)) ([22413f9](https://github.com/nozomiishii/workflows/commit/22413f90eb82e6667eb1580e810f39a80dcbd31e))
+* update dependency astral-sh/uv to v0.12.11 ([#143](https://github.com/nozomiishii/workflows/issues/143)) ([f9e5eeb](https://github.com/nozomiishii/workflows/commit/f9e5eeb030953833a6ecbeaf10867715bb69d02e))
+* update dependency astral-sh/uv to v0.12.12 ([#147](https://github.com/nozomiishii/workflows/issues/147)) ([5c8c456](https://github.com/nozomiishii/workflows/commit/5c8c45638d5eae56c2f757b81b17c74c33ee870c))
+* update dependency astral-sh/uv to v0.12.13 ([#149](https://github.com/nozomiishii/workflows/issues/149)) ([115d667](https://github.com/nozomiishii/workflows/commit/115d66786b06058fa2682c5996f1fa4a12ce3f29))
+* update dependency kjanat/actionlint to v1.16.0 ([#144](https://github.com/nozomiishii/workflows/issues/144)) ([88a9e59](https://github.com/nozomiishii/workflows/commit/88a9e59fabc10dc934ddb2760cedb04633fcbdd8))
+* update dependency kjanat/actionlint to v1.16.1 ([#148](https://github.com/nozomiishii/workflows/issues/148)) ([748c7c2](https://github.com/nozomiishii/workflows/commit/748c7c2885cfb7ac91bf463c6818c5d46faff7ff))
+* update dependency zizmor to v1.30.1 ([#146](https://github.com/nozomiishii/workflows/issues/146)) ([d3b39d2](https://github.com/nozomiishii/workflows/commit/d3b39d22ab52c7fd060399174973f01e5f1f5718))
+
 ## [4.5.1](https://github.com/nozomiishii/workflows/compare/v4.5.0...v4.5.1) (2026-09-11)
 
 
