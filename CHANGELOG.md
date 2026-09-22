@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.5.2](https://github.com/nozomiishii/workflows/compare/v4.5.1...v4.5.2) (2026-09-22)
+
+
+### Miscellaneous
+
+* drop the CLAUDE.md bridge ([#155](https://github.com/nozomiishii/workflows/issues/155)) ([e4fb815](https://github.com/nozomiishii/workflows/commit/e4fb8150ad133bfbe089c563c39283ebda5c4715))
+* stop ignoring CLAUDE.local.md ([#156](https://github.com/nozomiishii/workflows/issues/156)) ([75760ce](https://github.com/nozomiishii/workflows/commit/75760ce4d5967ad2769915e64587109f4a684875))
+* update dependency @nozomiishii/commitlint-config to v2.7.0 ([#150](https://github.com/nozomiishii/workflows/issues/150)) ([22413f9](https://github.com/nozomiishii/workflows/commit/22413f90eb82e6667eb1580e810f39a80dcbd31e))
+* update dependency @nozomiishii/commitlint-config to v2.7.1 ([#157](https://github.com/nozomiishii/workflows/issues/157)) ([b9dff75](https://github.com/nozomiishii/workflows/commit/b9dff75d118e04eb2f14f22fe0536d98c0ab83a2))
+* update dependency @nozomiishii/commitlint-config to v2.7.2 ([#160](https://github.com/nozomiishii/workflows/issues/160)) ([55655a9](https://github.com/nozomiishii/workflows/commit/55655a9eff56d6b4e2ff77084b2b148b3ae35668))
+* update dependency astral-sh/uv to v0.12.11 ([#143](https://github.com/nozomiishii/workflows/issues/143)) ([f9e5eeb](https://github.com/nozomiishii/workflows/commit/f9e5eeb030953833a6ecbeaf10867715bb69d02e))
+* update dependency astral-sh/uv to v0.12.12 ([#147](https://github.com/nozomiishii/workflows/issues/147)) ([5c8c456](https://github.com/nozomiishii/workflows/commit/5c8c45638d5eae56c2f757b81b17c74c33ee870c))
+* update dependency astral-sh/uv to v0.12.13 ([#149](https://github.com/nozomiishii/workflows/issues/149)) ([115d667](https://github.com/nozomiishii/workflows/commit/115d66786b06058fa2682c5996f1fa4a12ce3f29))
+* update dependency astral-sh/uv to v0.12.14 ([#152](https://github.com/nozomiishii/workflows/issues/152)) ([d023d40](https://github.com/nozomiishii/workflows/commit/d023d4085e26016226680216c3a6d7bbef5ba328))
+* update dependency astral-sh/uv to v0.12.15 ([#153](https://github.com/nozomiishii/workflows/issues/153)) ([63053d4](https://github.com/nozomiishii/workflows/commit/63053d4b90cbfc0a77e37ea7b63ed2e93eb4ee61))
+* update dependency astral-sh/uv to v0.12.16 ([#158](https://github.com/nozomiishii/workflows/issues/158)) ([ce476fc](https://github.com/nozomiishii/workflows/commit/ce476fc26326392a56dd9459353ba6d20f28c54c))
+* update dependency astral-sh/uv to v0.12.17 ([#159](https://github.com/nozomiishii/workflows/issues/159)) ([7a41b38](https://github.com/nozomiishii/workflows/commit/7a41b38685d622ec01836ce53a954571245e9b1b))
+* update dependency cli/cli to v2.101.0 ([#154](https://github.com/nozomiishii/workflows/issues/154)) ([6068c5b](https://github.com/nozomiishii/workflows/commit/6068c5b1c90d44437c40f611be898f09d7db40d9))
+* update dependency kjanat/actionlint to v1.16.0 ([#144](https://github.com/nozomiishii/workflows/issues/144)) ([88a9e59](https://github.com/nozomiishii/workflows/commit/88a9e59fabc10dc934ddb2760cedb04633fcbdd8))
+* update dependency kjanat/actionlint to v1.16.1 ([#148](https://github.com/nozomiishii/workflows/issues/148)) ([748c7c2](https://github.com/nozomiishii/workflows/commit/748c7c2885cfb7ac91bf463c6818c5d46faff7ff))
+* update dependency kjanat/actionlint to v1.17.0 ([#151](https://github.com/nozomiishii/workflows/issues/151)) ([ea47611](https://github.com/nozomiishii/workflows/commit/ea47611875a478437b6bebfed63adc9ec5729f55))
+* update dependency zizmor to v1.30.1 ([#146](https://github.com/nozomiishii/workflows/issues/146)) ([d3b39d2](https://github.com/nozomiishii/workflows/commit/d3b39d22ab52c7fd060399174973f01e5f1f5718))
+
 ## [4.5.1](https://github.com/nozomiishii/workflows/compare/v4.5.0...v4.5.1) (2026-09-11)
 
 
