@@ -36,7 +36,8 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # action ごとに分け、同じ commit の edited と synchronize の run が cancel し合わないようにする
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.action }}
   cancel-in-progress: true
 permissions: {}
 jobs:
