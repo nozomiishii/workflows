@@ -36,7 +36,8 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # split by action so edited and synchronize runs on the same commit do not cancel each other
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.action }}
   cancel-in-progress: true
 permissions: {}
 jobs:
