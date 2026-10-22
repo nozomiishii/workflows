@@ -1,5 +1,48 @@
 # Changelog
 
+## [4.5.2](https://github.com/nozomiishii/workflows/compare/v4.5.1...v4.5.2) (2026-10-22)
+
+
+### Miscellaneous
+
+* drop the CLAUDE.md bridge ([#155](https://github.com/nozomiishii/workflows/issues/155)) ([e4fb815](https://github.com/nozomiishii/workflows/commit/e4fb8150ad133bfbe089c563c39283ebda5c4715))
+* record why the caller concurrency group is split by event action ([#171](https://github.com/nozomiishii/workflows/issues/171)) ([f84f7d0](https://github.com/nozomiishii/workflows/commit/f84f7d0b92b5d18adf77a41129c4fd0788e5cae0))
+* rename the release GitHub App to nozomiishii-ci ([#180](https://github.com/nozomiishii/workflows/issues/180)) ([5fc3f43](https://github.com/nozomiishii/workflows/commit/5fc3f43359c005f8f85c4afec79b64ebd6c49f70))
+* split the recommended concurrency group by event action ([#170](https://github.com/nozomiishii/workflows/issues/170)) ([84324ff](https://github.com/nozomiishii/workflows/commit/84324ff99e537fdcab6435e16a6e184314cb6c4f))
+* stop ignoring CLAUDE.local.md ([#156](https://github.com/nozomiishii/workflows/issues/156)) ([75760ce](https://github.com/nozomiishii/workflows/commit/75760ce4d5967ad2769915e64587109f4a684875))
+* update 1password/op docker tag to v2.40.0 ([#168](https://github.com/nozomiishii/workflows/issues/168)) ([403fade](https://github.com/nozomiishii/workflows/commit/403fade186c4f90a87af806928365cddc17d5e96))
+* update 1password/op docker tag to v2.41.0 ([#173](https://github.com/nozomiishii/workflows/issues/173)) ([6419064](https://github.com/nozomiishii/workflows/commit/64190642c8b42d53bffd4c4e27e970b70cb7c336))
+* update actions/create-github-app-token action to v3.3.0 ([#174](https://github.com/nozomiishii/workflows/issues/174)) ([7dee7e5](https://github.com/nozomiishii/workflows/commit/7dee7e5c7f6bf175dc88eb3a8c2c8f7ab8a5e02b))
+* update dependency @nozomiishii/commitlint-config to v2.7.0 ([#150](https://github.com/nozomiishii/workflows/issues/150)) ([22413f9](https://github.com/nozomiishii/workflows/commit/22413f90eb82e6667eb1580e810f39a80dcbd31e))
+* update dependency @nozomiishii/commitlint-config to v2.7.1 ([#157](https://github.com/nozomiishii/workflows/issues/157)) ([b9dff75](https://github.com/nozomiishii/workflows/commit/b9dff75d118e04eb2f14f22fe0536d98c0ab83a2))
+* update dependency @nozomiishii/commitlint-config to v2.7.2 ([#160](https://github.com/nozomiishii/workflows/issues/160)) ([55655a9](https://github.com/nozomiishii/workflows/commit/55655a9eff56d6b4e2ff77084b2b148b3ae35668))
+* update dependency @nozomiishii/commitlint-config to v2.8.0 ([#178](https://github.com/nozomiishii/workflows/issues/178)) ([102f0ef](https://github.com/nozomiishii/workflows/commit/102f0efca3251bc0153b89a7d5b7a64da43e2e9f))
+* update dependency @nozomiishii/commitlint-config to v2.8.1 ([#179](https://github.com/nozomiishii/workflows/issues/179)) ([60954a6](https://github.com/nozomiishii/workflows/commit/60954a6cc1a0289905ac13417833ff6671fdde1f))
+* update dependency @secretlint/quick-start to v13.0.6 ([#162](https://github.com/nozomiishii/workflows/issues/162)) ([ce50fa3](https://github.com/nozomiishii/workflows/commit/ce50fa3e9b393163f4c65d999065da1c906b5725))
+* update dependency @secretlint/quick-start to v13.0.7 ([#166](https://github.com/nozomiishii/workflows/issues/166)) ([5b4fffa](https://github.com/nozomiishii/workflows/commit/5b4fffa41d1b25f0b6931bf99ab10590303f7328))
+* update dependency astral-sh/uv to v0.12.11 ([#143](https://github.com/nozomiishii/workflows/issues/143)) ([f9e5eeb](https://github.com/nozomiishii/workflows/commit/f9e5eeb030953833a6ecbeaf10867715bb69d02e))
+* update dependency astral-sh/uv to v0.12.12 ([#147](https://github.com/nozomiishii/workflows/issues/147)) ([5c8c456](https://github.com/nozomiishii/workflows/commit/5c8c45638d5eae56c2f757b81b17c74c33ee870c))
+* update dependency astral-sh/uv to v0.12.13 ([#149](https://github.com/nozomiishii/workflows/issues/149)) ([115d667](https://github.com/nozomiishii/workflows/commit/115d66786b06058fa2682c5996f1fa4a12ce3f29))
+* update dependency astral-sh/uv to v0.12.14 ([#152](https://github.com/nozomiishii/workflows/issues/152)) ([d023d40](https://github.com/nozomiishii/workflows/commit/d023d4085e26016226680216c3a6d7bbef5ba328))
+* update dependency astral-sh/uv to v0.12.15 ([#153](https://github.com/nozomiishii/workflows/issues/153)) ([63053d4](https://github.com/nozomiishii/workflows/commit/63053d4b90cbfc0a77e37ea7b63ed2e93eb4ee61))
+* update dependency astral-sh/uv to v0.12.16 ([#158](https://github.com/nozomiishii/workflows/issues/158)) ([ce476fc](https://github.com/nozomiishii/workflows/commit/ce476fc26326392a56dd9459353ba6d20f28c54c))
+* update dependency astral-sh/uv to v0.12.17 ([#159](https://github.com/nozomiishii/workflows/issues/159)) ([7a41b38](https://github.com/nozomiishii/workflows/commit/7a41b38685d622ec01836ce53a954571245e9b1b))
+* update dependency astral-sh/uv to v0.12.18 ([#161](https://github.com/nozomiishii/workflows/issues/161)) ([b52bb81](https://github.com/nozomiishii/workflows/commit/b52bb81077cd75a8db892a4f32eb6258eb8c7caa))
+* update dependency astral-sh/uv to v0.12.21 ([#163](https://github.com/nozomiishii/workflows/issues/163)) ([55c0a3e](https://github.com/nozomiishii/workflows/commit/55c0a3ed434f10e358d19c18002b48b74c3faa56))
+* update dependency astral-sh/uv to v0.12.24 ([#167](https://github.com/nozomiishii/workflows/issues/167)) ([47a37fb](https://github.com/nozomiishii/workflows/commit/47a37fb7dd22e234b51770d1a5738ee5768ed4ee))
+* update dependency astral-sh/uv to v0.13.1 ([#175](https://github.com/nozomiishii/workflows/issues/175)) ([4431ebc](https://github.com/nozomiishii/workflows/commit/4431ebc83f7eba770c6762b2f75bb7bbc3a5af7b))
+* update dependency cli/cli to v2.101.0 ([#154](https://github.com/nozomiishii/workflows/issues/154)) ([6068c5b](https://github.com/nozomiishii/workflows/commit/6068c5b1c90d44437c40f611be898f09d7db40d9))
+* update dependency cli/cli to v2.102.0 ([#164](https://github.com/nozomiishii/workflows/issues/164)) ([a18deec](https://github.com/nozomiishii/workflows/commit/a18deecc648fb1ac23261dc3d2891ee886c50259))
+* update dependency kjanat/actionlint to v1.16.0 ([#144](https://github.com/nozomiishii/workflows/issues/144)) ([88a9e59](https://github.com/nozomiishii/workflows/commit/88a9e59fabc10dc934ddb2760cedb04633fcbdd8))
+* update dependency kjanat/actionlint to v1.16.1 ([#148](https://github.com/nozomiishii/workflows/issues/148)) ([748c7c2](https://github.com/nozomiishii/workflows/commit/748c7c2885cfb7ac91bf463c6818c5d46faff7ff))
+* update dependency kjanat/actionlint to v1.17.0 ([#151](https://github.com/nozomiishii/workflows/issues/151)) ([ea47611](https://github.com/nozomiishii/workflows/commit/ea47611875a478437b6bebfed63adc9ec5729f55))
+* update dependency zizmor to v1.30.1 ([#146](https://github.com/nozomiishii/workflows/issues/146)) ([d3b39d2](https://github.com/nozomiishii/workflows/commit/d3b39d22ab52c7fd060399174973f01e5f1f5718))
+* update dependency zizmor to v1.31.0 ([#176](https://github.com/nozomiishii/workflows/issues/176)) ([f41033e](https://github.com/nozomiishii/workflows/commit/f41033e3748f472af64a14e0eb58386b765f5550))
+* update jdx/mise-action action to v5 ([#165](https://github.com/nozomiishii/workflows/issues/165)) ([0a57068](https://github.com/nozomiishii/workflows/commit/0a5706817efad2283c2efad6e863e39381722f76))
+* update jdx/mise-action action to v5.1.1 ([#169](https://github.com/nozomiishii/workflows/issues/169)) ([6577020](https://github.com/nozomiishii/workflows/commit/657702000e533f52b9dcde5a1662fed7fc77ccf4))
+* update jdx/mise-action action to v5.1.2 ([#172](https://github.com/nozomiishii/workflows/issues/172)) ([6c6382f](https://github.com/nozomiishii/workflows/commit/6c6382f18df844c5309b86fad486d5fec70647df))
+* update node.js to v24.22.0 ([#177](https://github.com/nozomiishii/workflows/issues/177)) ([6c422e3](https://github.com/nozomiishii/workflows/commit/6c422e33355b1a00d63c3aee5b27d3bbf3159b26))
+
 ## [4.5.1](https://github.com/nozomiishii/workflows/compare/v4.5.0...v4.5.1) (2026-09-11)
 
 
