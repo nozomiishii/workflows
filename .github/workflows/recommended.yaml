@@ -39,7 +39,7 @@ jobs:
         uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         env:
           # renovate: datasource=node-version depName=node
-          NODE_VERSION: "26.13.0"
+          NODE_VERSION: "26.13.1"
           # renovate: datasource=github-releases depName=astral-sh/uv
           UV_VERSION: "0.13.7"
           # renovate: datasource=github-releases depName=cli/cli
