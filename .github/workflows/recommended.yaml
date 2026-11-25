@@ -43,7 +43,7 @@ jobs:
           # renovate: datasource=github-releases depName=astral-sh/uv
           UV_VERSION: "0.13.7"
           # renovate: datasource=github-releases depName=cli/cli
-          GH_VERSION: "2.103.3"
+          GH_VERSION: "2.105.0"
           # renovate: datasource=npm depName=@nozomiishii/commitlint-config
           COMMITLINT_CONFIG_VERSION: "2.8.1"
           # renovate: datasource=github-releases depName=kjanat/actionlint
