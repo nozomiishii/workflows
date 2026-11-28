@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.5.3](https://github.com/nozomiishii/workflows/compare/v4.5.2...v4.5.3) (2026-11-28)
+
+
+### Miscellaneous
+
+* update dependency astral-sh/uv to v0.13.10 ([#207](https://github.com/nozomiishii/workflows/issues/207)) ([a387ff5](https://github.com/nozomiishii/workflows/commit/a387ff528302f486708312d7db56ef0b07028bd7))
+
 ## [4.5.2](https://github.com/nozomiishii/workflows/compare/v4.5.1...v4.5.2) (2026-11-26)
 
 
